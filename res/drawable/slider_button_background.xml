@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true"><layer-list>
+            <item><shape>
+                    <solid android:color="#000000" />
+
+                    <corners android:radius="0dp" />
+                </shape></item>
+            <item><bitmap android:dither="true" android:src="@drawable/button_swipe_long" />
+            </item>
+        </layer-list></item>
+    <item><bitmap android:dither="true" android:src="@drawable/button_swipe_long" />
+    </item>
+
+</selector>

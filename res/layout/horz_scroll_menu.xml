@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu"
+    android:layout_width="1dp"
+    android:layout_height="1dp"
+    android:orientation="vertical" >
+    
+    
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/chapter_menu"
+        android:cacheColorHint="@color/chapter_menu"
+        android:scrollbars="none" >
+    </ListView>
+        
+     <ListView
+         android:id="@+id/articles_list"
+         android:layout_width="210dip"
+         android:layout_height="wrap_content"
+         android:layout_gravity="right"
+         android:background="@color/articles_menu"
+         android:cacheColorHint="@color/articles_menu"
+         android:scrollbars="none"
+         android:visibility="gone" >
+        
+    </ListView>
+   
+    
+    
+
+</FrameLayout>

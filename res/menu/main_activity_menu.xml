@@ -1,0 +1,35 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    
+    <item android:id="@+id/menu_email"
+        android:title="@string/menu_email"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_help" />
+    
+    <item android:id="@+id/menu_vote"
+        android:title="@string/menu_vote"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_agenda" />
+    
+    <item android:id="@+id/menu_text_copy"
+        android:title="@string/menu_text_copy"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_edit" />
+    
+    <item android:id="@+id/menu_info"
+        android:title="@string/menu_info"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_info_details" />
+    
+    <item android:id="@+id/menu_add_bookmark"
+        android:title="@string/menu_add_bookmark"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_add" />
+    
+    <!-- <item android:id="@+id/menu_search"
+        android:title="@string/menu_search"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_search" /> -->
+    
+    
+</menu>

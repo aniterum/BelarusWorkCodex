@@ -1,0 +1,28 @@
+<resources> 
+
+    <string name="app_name">ТК РБ</string>
+    <string name="app_caption">Трудовой кодекс Республики Беларусь</string>
+    <string name="menu_email">Есть хорошая идея? Нашли ошибку?</string>
+    <string name="menu_vote">Голосование</string>
+    <string name="menu_info">О документе</string>
+    <string name="menu_add_bookmark">Добавить закладку</string>
+    <string name="menu_text_copy">Копировать текст</string>
+    <string name="text_copy_msg">Текст скопирован</string>
+    <string name="text_copy_msg_err">Ошибка копирования</string>
+    <string name="menu_search">Поиск</string>
+    <string name="menu_show_bookmarks">Закладки</string>
+    <string name="dialog_email">Отправить сообщение разработчику</string>
+    <string name="dialog_email_who_are_you">Представитесь?</string>
+    <string name="dialog_email_message_text">Можете писать что угодно :)</string>
+    <string name="email_prefix">Job</string>
+    <string name="you_have_no_bookmarks">У вас нет закладок</string>
+    <string name="bookmark_already_exists">Эта статья уже есть в ваших закладках!</string>
+    <string name="why_do_you_want_this">Зачем вам такая закладка?</string>
+    <string name="can_not_copy_this">Что же вы хотите скопировать здесь?</string>
+    <string name="bookmark_added">Статья добавлена в закладки</string>
+    <string name="delete_bookmark_x">× </string>
+    <string name="test_chapter">Статья 341</string>
+ 
+	
+   
+</resources>

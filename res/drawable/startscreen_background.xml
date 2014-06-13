@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item>
+        <bitmap
+           android:dither="true"
+           android:src="@drawable/diagonal_line"
+           android:tileMode="repeat" />
+    </item>
+    <item>
+        <bitmap
+           android:dither="true"
+           android:src="@drawable/icon_book_tk"/>
+    </item>
+</layer-list>

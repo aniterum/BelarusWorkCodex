@@ -1,0 +1,14 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:gravity="center_vertical"
+    android:textSize="15sp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:textStyle="italic"
+    android:text="Codex_Info"
+    
+/>

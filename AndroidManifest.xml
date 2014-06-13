@@ -1,0 +1,37 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.law.belarus.work.codex"
+    android:versionCode="9"
+    android:versionName="2.2.0" 
+    android:installLocation="auto">
+
+    <uses-sdk
+        android:minSdkVersion="4"
+        android:targetSdkVersion="15" />
+    
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar"
+        >
+        <!--  android:theme="@style/AppTheme" --> 
+        <activity
+            android:name="com.law.belarus.work.codex.MainActivity"
+            android:label="@string/app_name">
+            
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.law.belarus.work.codex.EmailActivity"
+            android:label="@string/dialog_email">
+        </activity>
+        
+    </application>
+
+</manifest>
