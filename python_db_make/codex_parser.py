@@ -1,6 +1,6 @@
 # coding: utf-8
 
-codex_file = "job_codex.txt"
+codex_file = "codex.txt"
 
 with open(codex_file, "rt") as codex:
     allLines = codex.readlines()
@@ -103,7 +103,7 @@ import os
 
 #Удаляем имеющийся файл
 
-dbFileName = codex_file[:codex_file.find(".")]+".db"
+dbFileName = codex_file[:codex_file.find(".")]+".sqlite"
 
 os.system("rm ./" + dbFileName)
 
@@ -112,11 +112,11 @@ cur = db.cursor()
 
 CREATE_TABLE_ARTICLES = "CREATE TABLE Articles (ID UNSIGNED INT PRIMARY KEY, CHAPTER UNSIGNED INT, TITLE TINYTEXT, ARTICLE_TEXT TEXT, IN_BOOKMARKS INT, OFFSET INT)"
 CREATE_TABLE_CHAPTERS = "CREATE TABLE Chapters (ID UNSIGNED INT, TITLE TINYTEXT)"
-CREATE_TABLE_DOCINFO= "CREATE TABLE Docinfo (ID UNSIGNED INT, TITLE TINYTEXT, INFO TEXT, DATABASEVERSION INT)"
+CREATE_TABLE_DOCINFO  = "CREATE TABLE Docinfo (ID UNSIGNED INT, TITLE TINYTEXT, INFO TEXT, VERSION INT)"
 
 INSERT_ARTICLE = "INSERT INTO Articles VALUES ('%(id)s', '%(chapter)s', '%(title)s', '%(text)s', '0', '%(offset)s')"
 INSERT_CHAPTER = "INSERT INTO Chapters VALUES ('%(id)s', '%(title)s')"
-INSERT_DOCINFO = "INSERT INTO Docinfo  VALUES ('%(zero)s', '%(title)s', '%(text)s')"
+INSERT_DOCINFO = "INSERT INTO Docinfo  VALUES ('%(zero)s', '%(title)s', '%(text)s', '%(version)i')"
 
 
 cur.execute(CREATE_TABLE_ARTICLES)
@@ -129,7 +129,10 @@ for article in articles_list_dict:
 for chapter in chapters_names:
     cur.execute(INSERT_CHAPTER % chapter)
 
-cur.execute(INSERT_DOCINFO % {"zero":"0", "title":"О документе", "text":"".join(codex_info).strip()})
+import time
+
+cur.execute(INSERT_DOCINFO % {"zero":"0", "title":"О документе", "text":"".join(codex_info).strip(),
+                              "version":int(time.time())})
 
 db.commit()
 db.close()

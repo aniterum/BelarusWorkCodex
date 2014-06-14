@@ -5,4 +5,4 @@
 *.dex
 BuildConfig.java
 R.java
-job_codex.db
+*.sqlite
