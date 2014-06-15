@@ -131,12 +131,28 @@ for chapter in chapters_names:
 
 import time
 
+cur_time = int(time.time())
+
 cur.execute(INSERT_DOCINFO % {"zero":"0", "title":"О документе", "text":"".join(codex_info).strip(),
-                              "version":int(time.time())})
+                              "version":cur_time})
 
 db.commit()
 db.close()
 
+#Автоматическое обновление файла строк с текущим временем создания базы данных
 
-#os.system("adb push /media/user/An/CODEX/job_codex.db /mnt/sdcard")
-#os.system("cp -b /media/user/An/CODEX/job_codex.db ~/Документы/Java_Workspace/BelarusWorkCodex_2.0/res/raw/job_codex.db")
+file = "../res/values/strings.xml"
+template = "    <string name=\"db_version\">%i</string>"
+
+result = []
+
+with open(file, "rt") as str_file:
+    for line in str_file:
+        if (line.find("db_version") != -1):
+            result.append(template % cur_time)
+        else:
+            result.append(line)
+
+open(file, "wt").write("".join(result))
+
+os.system("cp -b ./codex.sqlite ../res/raw/codex.db")
