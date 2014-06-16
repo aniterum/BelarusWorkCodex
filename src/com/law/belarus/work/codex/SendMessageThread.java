@@ -71,14 +71,14 @@ public class SendMessageThread extends AsyncTask<Void, Void, String> {
 
 		if (isOK) {
 			//Сообщение отправлено без ошибок
-			Toast connectError = Toast.makeText(parent,	EmailActivity.MSG_EVERYTHING_FINE, Toast.LENGTH_LONG);
+			Toast connectError = Toast.makeText(parent,	R.string.msg_everything_fine, Toast.LENGTH_LONG);
 			connectError.setGravity(Gravity.CENTER, 0, 0);
 			connectError.show();
 			parent.finish();
 
 		} else {
 			//Имелись ошибки при отправке, скорее всего отключен интернет
-			Toast connectError = Toast.makeText(parent, EmailActivity.MSG_ERROR, Toast.LENGTH_LONG);
+			Toast connectError = Toast.makeText(parent, R.string.msg_send_error, Toast.LENGTH_LONG);
 			connectError.setGravity(Gravity.CENTER, 0, 0);
 			connectError.show();
 

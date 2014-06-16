@@ -2,8 +2,6 @@ package com.law.belarus.work.codex;
 
 import java.net.URLEncoder;
 
-
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.pm.PackageInfo;
@@ -18,18 +16,14 @@ import android.widget.Toast;
 public class EmailActivity extends Activity {
 	
 	private final static String URL_FOR_SEND = "https://docs.google.com/spreadsheet/formResponse?formkey=dFN5cEN0UzdiSDZTel9fWDNSNzJSQWc6MQ&entry.0.single=%s&entry.1.single=%s&entry.2.single=%d&entry.3.single=%s&submit=Submit";
-	private final static String MSG_YOU_FORGOT = "Вы забыли написать сообщение :)";
-	public final static String MSG_ERROR	   = "При передаче данных произошла ошибка.\nПроверьте интернет-соединение и повторите";
-	public final static String MSG_EVERYTHING_FINE = "Сообщение отправлено.\nЗаглядываю я в них не часто,\nтак что если у вас что-то важное, то лучше свяжитесь со мной по eMail";
-	
 	
 	private EditText messageBox;
 	private EditText signBox;
 	private static String appVersion;
-//	private ProgressDialog dialog;
 	private static String EmailPrefix;
 	
-	
+	private static final String SPACEBAR_HEX = "%20";	
+	private static final String PLUS = "+";
  
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +49,7 @@ public void sendMessage(View v){
 	String msg = messageBox.getText().toString();
 	
 	if (msg.length() == 0){
-		Toast youForgot = Toast.makeText(this, MSG_YOU_FORGOT, Toast.LENGTH_LONG);
+		Toast youForgot = Toast.makeText(this, R.string.msg_you_forgot, Toast.LENGTH_LONG);
 		youForgot.setGravity(Gravity.CENTER, 0, 0);
 		youForgot.show();
 		return;
@@ -63,7 +57,10 @@ public void sendMessage(View v){
 	
 	String sign = signBox.getText().toString();
 	
-	ProgressDialog dialog = ProgressDialog.show(EmailActivity.this, "", "Отправка сообщения...", true);
+	//Добавлено, т.к. ProgressDialog не поддерживает подгрузку текста из ресурсов
+	CharSequence message = this.getResources().getText(R.string.msg_send_in_progress);
+	
+	ProgressDialog dialog = ProgressDialog.show(EmailActivity.this, null, message, true);
 	
 	SendMessageThread longTask = new SendMessageThread(this, makeURL(msg, sign), dialog);
 	longTask.execute();
@@ -78,11 +75,11 @@ public void sendMessage(View v){
  */
 public static String makeURL(String text, String sign){
 	
-	String encodedText = URLEncoder.encode(text).replace("+", "%20");
-	String encodedSign = URLEncoder.encode(sign).replace("+", "%20");
+	String encodedText = URLEncoder.encode(text).replace(PLUS, SPACEBAR_HEX);
+	String encodedSign = URLEncoder.encode(sign).replace(PLUS, SPACEBAR_HEX);
 	
 	
-	String result = String.format(URL_FOR_SEND, encodedText, encodedSign, Build.VERSION.SDK_INT, appVersion+"%20"+EmailPrefix);
+	String result = String.format(URL_FOR_SEND, encodedText, encodedSign, Build.VERSION.SDK_INT, appVersion + SPACEBAR_HEX + EmailPrefix);
 	
 	return result;
 	
