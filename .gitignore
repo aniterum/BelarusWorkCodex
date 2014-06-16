@@ -6,5 +6,5 @@
 BuildConfig.java
 R.java
 *.sqlite
-*.jar
-!android-support-v4.jar
+*.*~
+bin/

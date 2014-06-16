@@ -1,7 +1,6 @@
 package com.law.belarus.work.codex;
 
 import java.net.URLEncoder;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.pm.PackageInfo;
@@ -59,13 +58,11 @@ public void sendMessage(View v){
 	
 	//Добавлено, т.к. ProgressDialog не поддерживает подгрузку текста из ресурсов
 	CharSequence message = this.getResources().getText(R.string.msg_send_in_progress);
-	
 	ProgressDialog dialog = ProgressDialog.show(EmailActivity.this, null, message, true);
+
+	new SendMessageThread(this, makeURL(msg, sign), dialog).execute();
 	
-	SendMessageThread longTask = new SendMessageThread(this, makeURL(msg, sign), dialog);
-	longTask.execute();
-	
-	 }
+}
 
 /**
  * Создаёт URL для отправки запроса в Google Docs
@@ -77,7 +74,6 @@ public static String makeURL(String text, String sign){
 	
 	String encodedText = URLEncoder.encode(text).replace(PLUS, SPACEBAR_HEX);
 	String encodedSign = URLEncoder.encode(sign).replace(PLUS, SPACEBAR_HEX);
-	
 	
 	String result = String.format(URL_FOR_SEND, encodedText, encodedSign, Build.VERSION.SDK_INT, appVersion + SPACEBAR_HEX + EmailPrefix);
 	

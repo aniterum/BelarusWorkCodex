@@ -61,7 +61,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 	private static String TAG = "t";
 
-	private static final String DB_NAME = "data.db";
+	private static final String DB_NAME = "codex.db";
 	public static String FILES_DIR;
 	public static DatabaseAccess db;
 
@@ -72,21 +72,15 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		super.onCreate(savedInstanceState);
 
 		FILES_DIR = getBaseContext().getFilesDir().getPath() + "/" + DB_NAME;
-		Log.i(TAG, "Имя файла - " + FILES_DIR);
 
-		db = new DatabaseAccess(FILES_DIR, this.getResources());
-
-		// if (data == null)
-		// data = new DataContainer(this.getResources());
+		if (db == null)
+			db = new DatabaseAccess(FILES_DIR, this.getResources());
 
 		if (inflater == null)
 			inflater = LayoutInflater.from(this);
 
-		// Log.i("MainActivity", "End Loading for " +
-		// Long.toString(System.currentTimeMillis() - loadStart)+ " ms");
 
-		scrollView = (MyHorizontalScrollView) inflater.inflate(
-				R.layout.horz_scroll_with_list_menu, null);
+		scrollView = (MyHorizontalScrollView) inflater.inflate(R.layout.horz_scroll_with_list_menu, null);
 
 		menu = inflater.inflate(R.layout.horz_scroll_menu, null);
 		app = inflater.inflate(R.layout.horz_scroll_app_with_articles, null);
@@ -108,8 +102,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		articlesListView.setVisibility(ListView.INVISIBLE);
 
 		btnSlide = (ImageView) tabBar.findViewById(R.id.BtnSlide);
-		btnSlide.setOnClickListener(new ClickListenerForScrolling(scrollView,
-				menu, articlesListView));
+		btnSlide.setOnClickListener(new ClickListenerForScrolling(scrollView, menu, articlesListView));
 
 		final View[] children = new View[] { menu, app };
 

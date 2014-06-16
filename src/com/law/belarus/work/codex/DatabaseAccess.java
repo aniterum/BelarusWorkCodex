@@ -12,6 +12,8 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
+
 
 /**
  * Класс для доступа к базе данных, содержащей данные кодекса
@@ -48,6 +50,7 @@ public class DatabaseAccess {
 	private static final String ARTICLE_COLUMN_BOOKMARK = "IN_BOOKMARKS";
 	private static final String ARTICLE_COLUMN_OFFSET = "OFFSET";
 	private static final String DOCINFO_COLUMN_TEXT = "INFO";
+	private static final String DOCINFO_COLUMN_VERSION = "VERSION";
 	
 	private static final int BOOKMARK_OFF = 0;
 	private static final int BOOKMARK_ON = 1;
@@ -79,54 +82,78 @@ public class DatabaseAccess {
 	 */
 	public DatabaseAccess(String dbPath, Resources res) {
 
-		File db;
-		db = new File(dbPath);
+		Boolean db_exists = new File(dbPath).exists();
 		//Проверка на существование файла
 		//FIXME Добавить копирование закладок, при обновлении базы данных, сверяя версии баз данных
-		if (db.exists()) {
-			
+		if (db_exists) {
 			try {
 				base = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+				
+				Cursor docinfo = base.rawQuery(SQL_GET_DOCINFO, null);
+				docinfo.moveToFirst();
+				
+				//Проверяем наличие столбца с версией базы данных
+				int version_column = docinfo.getColumnIndex(DOCINFO_COLUMN_VERSION);
+				
+				if (version_column != -1){
+					/* Для сравнения баз данных старой и обновленной используем версии
+					   базы данных и строки с версией в приложении */
+					
+					String db_version = docinfo.getString(version_column);
+					String app_db_version = res.getString(R.string.db_version);
+					
+					
+					if (!db_version.equals(app_db_version)){
+						ArrayList<Article> temporary_bookmarks = getBookmarks();
+						base.close();
+						CopyDatabaseFromResources(dbPath, res);
+						//После копирования базы данных открываем её для чтения
+						base = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+						
+						
+						//Копируем закладки в новую базу данных
+						if (temporary_bookmarks.size() != 0)
+							for (Article article : temporary_bookmarks){
+								Log.i(LogTag, " id: " + article.id);
+								addBookmark(article.id);
+							}
+					}
+						
+					
+					
+					
+				} else { 
+					//Старая версия базы данных
+					ArrayList<Article> temporary_bookmarks = getBookmarks();
+					base.close();
+					CopyDatabaseFromResources(dbPath, res);
+					//После копирования базы данных открываем её для чтения
+					base = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
+					
+					
+					//Копируем закладки в новую базу данных
+					if (temporary_bookmarks != null)
+						if (temporary_bookmarks.size() != 0)
+							for (Article article : temporary_bookmarks) 
+								addBookmark(article.id);
+					
+				}
+				
 			} catch (SQLiteException e) {
 				e.printStackTrace();
-			}
+			} 
+			
 
 		} else {
 			//База данных не существует. Либо это первый запуск либо чистили данные приложения.
 
-			//Открываем исходную базу данных в ресурсах
-			InputStream resBase = res.openRawResource(R.raw.codex);
+			CopyDatabaseFromResources(dbPath, res);
+			base = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
 
-			try {
-
-				FileOutputStream saveBase = new FileOutputStream(db);
-				final int bufSize = resBase.available(); //Длина файла базы данных в ресурсах
-
-				final byte[] buffer = new byte[bufSize];
-				resBase.read(buffer);
-
-				saveBase.write(buffer);
-
-				resBase.close();
-				saveBase.close();
-
-				base = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
-				
-
-			} // try
-			  catch (FileNotFoundException e) {
-				 e.printStackTrace();
-			} catch (IOException e) {
-				 e.printStackTrace();
-			} catch (SQLiteException e) {
-				e.printStackTrace();
-			}
-
-		} // else
+		}		
 		
 		//Находим столбцы соответствующих таблиц, для совместимости с перестановками
-		
-		
+				
 		Cursor articles = base.rawQuery(SQL_GET_ARTICLES, null);
 		SQL_ARTICLE_ID 		 = articles.getColumnIndex(COLUMN_ID);
 		SQL_ARTICLE_CHAPTER  = articles.getColumnIndex(COLUMN_CHAPTER);
@@ -144,6 +171,37 @@ public class DatabaseAccess {
 
 	}
 
+	
+	private void CopyDatabaseFromResources(String dbPath, Resources res){
+		
+		File db_file = new File(dbPath);
+		//Открываем исходную базу данных в ресурсах
+		InputStream resBase = res.openRawResource(R.raw.codex);
+
+		try {
+
+			FileOutputStream saveBase = new FileOutputStream(db_file);
+			final int bufSize = resBase.available(); //Длина файла базы данных в ресурсах
+
+			final byte[] buffer = new byte[bufSize];
+			resBase.read(buffer);
+
+			saveBase.write(buffer);
+
+			resBase.close();
+			saveBase.close();
+
+		} // try
+		  catch (FileNotFoundException e) {
+			 e.printStackTrace();
+		} catch (IOException e) {
+			 e.printStackTrace();
+		} catch (SQLiteException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 
 	/**
 	 * Загрузить все статьи из определённой главы
@@ -281,13 +339,12 @@ public class DatabaseAccess {
 	 * @param articleId - номер статьи в главе
 	 * @return
 	 */
-	public int addBookmark(int chapterId, int articleId) {
+	public int addBookmark(int chapterId, int articleOffset) {
 
-		//TODO Переработать метод для того, чтобы использовался лишь ID статьи
 		Cursor bookmark = null;
 
 		ArrayList<Article> art = this.getArticlesByChapter(chapterId);
-		int id = art.get(articleId).id;
+		int id = art.get(articleOffset).id;
 		
 		final String SQL_QUERY = SQL_GET_ARTICLES + WHERE + "(" + ARTICLE_COLUMN_BOOKMARK + "=1 AND " + COLUMN_ID + EQUAL + id + ")";
 
@@ -308,6 +365,33 @@ public class DatabaseAccess {
 		}
 
 		return id;
+
+	}
+	
+	/**
+	 * Добавляет закладку используя только id статьи
+	 */
+	public int addBookmark(int articleId) {
+
+		final String SQL_QUERY = SQL_GET_ARTICLES + WHERE + "(" + ARTICLE_COLUMN_BOOKMARK + "=1 AND " + COLUMN_ID + EQUAL + articleId + ")";
+
+		try {
+
+			Cursor bookmark = base.rawQuery(SQL_QUERY, null);
+
+			if (bookmark.getCount() != 0)
+				return BOOKMARK_ALREADY_EXISTS;
+
+			ContentValues values = new ContentValues();
+			values.put(ARTICLE_COLUMN_BOOKMARK, BOOKMARK_ON);
+
+			base.update(TABLE_NAME_ARTICLES, values, COLUMN_ID + EQUAL + articleId, null);
+
+		} catch (SQLiteException e) {
+			e.printStackTrace();
+		}
+
+		return articleId;
 
 	}
 	

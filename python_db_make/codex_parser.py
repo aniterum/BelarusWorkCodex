@@ -112,11 +112,11 @@ cur = db.cursor()
 
 CREATE_TABLE_ARTICLES = "CREATE TABLE Articles (ID UNSIGNED INT PRIMARY KEY, CHAPTER UNSIGNED INT, TITLE TINYTEXT, ARTICLE_TEXT TEXT, IN_BOOKMARKS INT, OFFSET INT)"
 CREATE_TABLE_CHAPTERS = "CREATE TABLE Chapters (ID UNSIGNED INT, TITLE TINYTEXT)"
-CREATE_TABLE_DOCINFO  = "CREATE TABLE Docinfo (ID UNSIGNED INT, TITLE TINYTEXT, INFO TEXT, VERSION INT)"
+CREATE_TABLE_DOCINFO  = "CREATE TABLE Docinfo  (ID UNSIGNED INT, TITLE TINYTEXT, INFO TEXT, VERSION TINYTEXT)"
 
 INSERT_ARTICLE = "INSERT INTO Articles VALUES ('%(id)s', '%(chapter)s', '%(title)s', '%(text)s', '0', '%(offset)s')"
 INSERT_CHAPTER = "INSERT INTO Chapters VALUES ('%(id)s', '%(title)s')"
-INSERT_DOCINFO = "INSERT INTO Docinfo  VALUES ('%(zero)s', '%(title)s', '%(text)s', '%(version)i')"
+INSERT_DOCINFO = "INSERT INTO Docinfo  VALUES ('%(zero)s', '%(title)s', '%(text)s', '%(version)s')"
 
 
 cur.execute(CREATE_TABLE_ARTICLES)
@@ -129,12 +129,12 @@ for article in articles_list_dict:
 for chapter in chapters_names:
     cur.execute(INSERT_CHAPTER % chapter)
 
-import time
+import time, datetime, hashlib
 
-cur_time = int(time.time())
+cur_time = str(datetime.datetime.toordinal(datetime.datetime.now())) + "_" + str(time.time())
+version = hashlib.sha1(cur_time.encode()).hexdigest()
 
-cur.execute(INSERT_DOCINFO % {"zero":"0", "title":"О документе", "text":"".join(codex_info).strip(),
-                              "version":cur_time})
+cur.execute(INSERT_DOCINFO % {"zero":"0", "title":"О документе", "text":"".join(codex_info).strip(), "version":version})
 
 db.commit()
 db.close()
@@ -142,14 +142,14 @@ db.close()
 #Автоматическое обновление файла строк с текущим временем создания базы данных
 
 file = "../res/values/strings.xml"
-template = "    <string name=\"db_version\">%i</string>"
+template = "    <string name=\"db_version\">%s</string>\n"
 
 result = []
 
 with open(file, "rt") as str_file:
     for line in str_file:
         if (line.find("db_version") != -1):
-            result.append(template % cur_time)
+            result.append(template % version)
         else:
             result.append(line)
 
