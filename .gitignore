@@ -7,4 +7,4 @@ BuildConfig.java
 R.java
 *.sqlite
 *.*~
-bin/
+bin/dexedLibs/
