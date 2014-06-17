@@ -120,8 +120,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		chapterListView = (ListView) menu.findViewById(R.id.list);
 
-		viewUtils.initListViewChapters(this, chapterListView,
-				R.layout.simple_list_item_with_chapter_num, articlesListView);
+		viewUtils.initListViewChapters(this, chapterListView, R.layout.simple_list_item_with_chapter_num, articlesListView);
 
 		if (openedChapter == OPENED_DOC_INFO)
 			loadDocInfo();

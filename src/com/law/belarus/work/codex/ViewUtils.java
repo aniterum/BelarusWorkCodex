@@ -41,6 +41,8 @@ import android.widget.Toast;
  */
 
 
+
+
 public class ViewUtils {
 	
 	public static final String CHAPTER_NAME = "ch";
@@ -48,6 +50,7 @@ public class ViewUtils {
 	public static final String ARTICLES_IN_CHAPTER = "art";
 	public static int    openedChapter = -1;
 	public static final float PERCENT = 0.85f;
+	private static final int PLUS_ONE_FOR_BOOKMARKS = 1;
 	
 	public static ArticleItemCallback articleCallback = null;
 	
@@ -83,22 +86,28 @@ public void initListViewChapters(Context context, final ListView listView, int l
         //Наполняем Хеш-карту значениями для списка Глав
         ArrayList<Chapter> chaptersList = MainActivity.db.getChaptersList();
         
-        //Добавляем Закладки в хеш-карту
+        //Добавляем Пункт меню глав "Закладки" в хеш-карту
         hm = new HashMap<String, Object>();
   	   	hm.put(CHAPTER_NAME, "    ЗАКЛАДКИ");                 
   	   	hm.put(ARTICLES_IN_CHAPTER, "     все, что сохранили");         
  	    hm.put(CHAPTER_ID, "");
   	    chapterInfo.add(hm); 
         
-        
+        /* Формируем хеш-карты для всех глав кодекса
+         * чтобы они выглядели как:
+         * 
+         *   | Название главы. |
+         * 1 |                 | > 
+         *   | ст. 1 - 14      |  
+         */
         for (Chapter chapter : chaptersList){
      	   hm = new HashMap<String, Object>();
      	   hm.put(CHAPTER_NAME, chapter.title);                 
      	   hm.put(ARTICLES_IN_CHAPTER, "ст." + chapter.firstArticle + "-" + chapter.lastArticle);         
      	   if (chapter.id < 9)
-     		   hm.put(CHAPTER_ID, " " + (chapter.id+1));
+     		   hm.put(CHAPTER_ID, " " + (chapter.id + PLUS_ONE_FOR_BOOKMARKS));
      	   else
-     		   hm.put(CHAPTER_ID, Integer.toString(chapter.id+1));
+     		   hm.put(CHAPTER_ID, Integer.toString(chapter.id + PLUS_ONE_FOR_BOOKMARKS));
       
      	   chapterInfo.add(hm); 
         }
@@ -107,19 +116,18 @@ public void initListViewChapters(Context context, final ListView listView, int l
         		context, 
         		chapterInfo, 
         		layout, 
-        		new String[]{ 			// Список хеш-ключей
-        		CHAPTER_NAME,         	//Название главый
-        		ARTICLES_IN_CHAPTER,	//Какие статьи есть в главе
-        		CHAPTER_ID				//Номер Главы
+        		new String[]{ 			 // Список хеш-ключей
+        		CHAPTER_NAME,         	 // Название главый
+        		ARTICLES_IN_CHAPTER,	 // Какие статьи есть в главе
+        		CHAPTER_ID				 // Номер Главы
                 }, 
-                new int[]{				//Значения хеш-ключей
-                R.id.ch_text1,			//Тут id TextBox'a в list.xml
-                R.id.ch_text2,
-                R.id.ch_text3});    
+                new int[]{				 // Значения хеш-ключей
+                R.id.chapter_menu_title, // Тут id TextBox'a в list.xml
+                R.id.chapter_menu_articles,
+                R.id.chapter_menu_id});    
     	
         listView.setAdapter(adapter); 
         
-        //listView.setOnTouchListener()
         
         
         
@@ -143,30 +151,36 @@ public void initListViewChapters(Context context, final ListView listView, int l
                 }
                 
               
-                if (articleListView.getVisibility() == ListView.INVISIBLE){
-                	if (articleListView.getWidth() != (int)listView.getWidth() * 0.85){
-                		ViewGroup.LayoutParams params = articleListView.getLayoutParams();
-                        params.width = (int) (listView.getWidth() * 0.85);
-                        articleListView.setLayoutParams(params);
-                        articleListView.requestLayout();
-                	}
-                	
-                	int use_layout = R.layout.article_list_item;
-                	
-                	if (position == 0)
-                		use_layout = R.layout.bookmark_list_item;
+				if (articleListView.getVisibility() == ListView.INVISIBLE) {
+					if (articleListView.getWidth() != (int) listView.getWidth() * PERCENT) {
+						ViewGroup.LayoutParams params = articleListView.getLayoutParams();
+						params.width = (int) (listView.getWidth() * PERCENT);
+						articleListView.setLayoutParams(params);
+						articleListView.requestLayout();
+					}
 
-                	ViewUtils.initListViewArticles(context, articleListView, use_layout, position);
-                	articleListView.setVisibility(ListView.VISIBLE);
-                	articleListView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_in));
-                	openedChapter = position; 
-                }
-                else{
+					int use_layout;
 
-                		articleListView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_out));
-                		articleListView.setVisibility(ListView.INVISIBLE);
-                    	openedChapter = position;
-                }
+					switch (position) {
+					case 0:
+						use_layout = R.layout.bookmark_list_item;
+						break;
+					default:
+						use_layout = R.layout.article_list_item;
+						break;
+					}
+
+					ViewUtils.initListViewArticles(context, articleListView, use_layout, position);
+					articleListView.setVisibility(ListView.VISIBLE);
+					articleListView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_in));
+					openedChapter = position;
+					
+				} else {
+
+					articleListView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_out));
+					articleListView.setVisibility(ListView.INVISIBLE);
+					openedChapter = position;
+				}
             }
         });
     }
