@@ -23,7 +23,6 @@ import android.util.Log;
  */
 public class DatabaseAccess {
 
-	@SuppressWarnings("unused")
 	private static final String LogTag = "DatabaseAccess";
 	private static final String SQLITE_ERROR_MSG = "!Ошибка при загрузке!";
 	public static SQLiteDatabase base;
@@ -487,7 +486,7 @@ public class DatabaseAccess {
 		if (cursor.getCount() == 0)
 			return null;
 		
-		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ".\n" + cursor.getString(SQL_ARTICLE_TITLE) + "\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
+		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
 
 	}
 	

@@ -8,3 +8,4 @@ R.java
 *.sqlite
 *.*~
 bin/dexedLibs/
+bin/
