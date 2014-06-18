@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.ClipboardManager;
 import android.text.Html;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -85,8 +84,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		menu = inflater.inflate(R.layout.horz_scroll_menu, null);
 		app = inflater.inflate(R.layout.horz_scroll_app_with_articles, null);
 
-		// docInfo.setBackgroundDrawable(getResources().getDrawable(R.drawable.tiled_background));
-
 		menuButton = (ImageView) app.findViewWithTag(TAG);
 		menuButton.setOnClickListener(new OnClickListener() {
 
@@ -153,10 +150,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		}
 
 		public void onClick(View v) {
-			// Context context = menu.getContext();
-			// String msg = "Slide " + new Date();
-			// Toast.makeText(context, msg, 1000).show();
-			// System.out.println(msg);
 
 			int menuWidth = menu.getMeasuredWidth();
 
@@ -176,7 +169,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 			isMenuVisible = menuOut;
 
-			// Log.i("menu visible?", "" + menuOut);
 
 			if (menuOut)
 				listViewArticles.setVisibility(ListView.INVISIBLE);
@@ -206,9 +198,9 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			dims[0] = w;
 			dims[1] = h;
 			final int menuIdx = 0;
-			if (idx == menuIdx) {
+			if (idx == menuIdx) 
 				dims[0] = w - btnWidth;
-			}
+			
 		}
 	}
 
@@ -324,53 +316,32 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		return true;
 	}
 
+	
+	
 	/**
 	 * Наполняем массив для передачи его конструктору слайдера
 	 * 
-	 * @param pages
-	 *            - массив, в который нужно добавлять текст статей
+	 * @param pages - массив, в который нужно добавлять текст статей
 	 * @param inflater
 	 * @param layot
 	 * @param view
-	 * @param chapter
-	 * @param articleIndex
+	 * @param chapter - нужная глава
 	 */
-	public void makePages(List<View> pages, LayoutInflater inflater, int layot,
-			int view, int chapter, int articleIndex) {
+	public void makePages(List<View> pages, LayoutInflater inflater, int layot, int view, int chapter) {
 
-		/*
-		 * int startIndex = DataContainer.startIndexes[chapter]-1; int lastIndex
-		 * = DataContainer.startIndexes[chapter+1]-1;
-		 */
-
-		// Log.i("start and last indexes", startIndex + " " + lastIndex);
-
-		final String ARTICLE = "<b><i>Статья ";
+		final String ARTICLE_START = "<b><i>Статья ";
 		final String ARTICLE_FIN = ". ";
 		final String ARTICLE_FIN2 = ".</i></b><br><br>";
 
 		ArrayList<Article> articlesInChapter = db.getArticlesByChapter(chapter);
 
-		// TODO Добавить эффект на нажатие по textView
-		/*OnClickListener itemClick = new OnClickListener() {
-
-			public void onClick(View v) {
-
-				Log.i(TAG, "CLICK");
-
-			}
-
-		};*/
-
 		for (Article article : articlesInChapter) {
+			
 			View page = inflater.inflate(layot, null);
 			TextView textView = (TextView) page.findViewById(view);
-			textView.setText(Html.fromHtml(ARTICLE + article.id + ARTICLE_FIN
-					+ article.title + ARTICLE_FIN2
-					+ article.text.replace("\n", "<br><br>")));
-
-			// textView.setLongClickable(false);
-			// textView.setOnClickListener(itemClick);
+			textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
+												         + article.title + ARTICLE_FIN2
+												         + article.text.replace("\n", "<br><br>")));
 
 			pages.add(page);
 		}
@@ -382,31 +353,27 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	/**
 	 * Создание слайдера со статьями из главы
 	 * 
-	 * @param chapter
-	 *            - Глава, которую необходимо загрузить
-	 * @param articleIndex
-	 *            - Номер статьи внутри главы
+	 * @param chapter - Глава, которую необходимо загрузить
+	 * @param articleIndex - Номер статьи внутри главы
 	 */
 	public void loadPages(int chapter, int articleIndex) {
 
-		// Log.i("onCreate", "Loading pages");
 		List<View> pages = new ArrayList<View>();
-		makePages(pages, inflater, R.layout.article_page,
-				R.id.articleTextPageView, chapter, articleIndex);
+		makePages(pages, inflater, R.layout.article_page, R.id.articleTextPageView, chapter);
 
 		SamplePagerAdapter pagerAdapter = new SamplePagerAdapter(pages);
 
-		// Log.i("onCreate", "send pages to view");
 		swipePageView = new ViewPager(this);
 		swipePageView.setAdapter(pagerAdapter);
 		swipePageView.setCurrentItem(articleIndex);
 
-		// Log.i("loadPages", "give pager to layout");
 		container.removeAllViews();
 
 		container.addView(swipePageView);
 	}
 
+	
+	
 	public void loadDocInfo() {
 
 		openedChapter = OPENED_DOC_INFO;
@@ -420,6 +387,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		container.addView(docInfo);
 		chapterCaption.setText(getResources().getString(R.string.menu_info));
 	}
+	
+	
 
 	/**
 	 * Загружает главный экран с иконкой приложения
@@ -427,13 +396,13 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	public void loadStartScreen() {
 
 		LayoutInflater docInfo = LayoutInflater.from(this);
-		LinearLayout l = (LinearLayout) docInfo.inflate(R.layout.start_screen,
-				null);
+		LinearLayout l = (LinearLayout) docInfo.inflate(R.layout.start_screen, null);
 
 		container.removeAllViews();
 		container.addView(l);
 	}
 
+	
 	/**
 	 * Реакция на выбор статьи в списке
 	 */
@@ -455,10 +424,12 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		btnSlide.performClick();
 	}
 
+	
 	public void openMenu() {
 		this.openOptionsMenu();
 	}
 
+	
 	// @Override
 	// protected void onPause() {
 	// Log.i("OnPause", "Уход на задний план");
