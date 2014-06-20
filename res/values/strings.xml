@@ -26,6 +26,8 @@
     <string name="bookmark_added">Статья добавлена в закладки</string>
     <string name="delete_bookmark_x">× </string>
     <string name="arrow_to_right">></string>
+    <string name="arrow_to_left">&lt;</string>
+    
     
 	<string name="test_chapter">123</string>
 	

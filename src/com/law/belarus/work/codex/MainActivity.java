@@ -29,15 +29,15 @@ import android.widget.Toast;
 import com.law.belarus.work.codex.MyHorizontalScrollView.SizeCallback;
 
 public class MainActivity extends Activity implements ArticleItemCallback {
-	private MyHorizontalScrollView scrollView;
-	private View menu;
-	private View app;
-	private ImageView btnSlide;
-	public static ListView articlesListView;
-	public static ListView chapterListView;
-	private ViewPager swipePageView;	//Контейнер статей главы
-	private LinearLayout container;
-	private TextView chapterCaption;
+	private static MyHorizontalScrollView scrollView;
+	private static View menu;
+	private static View app;
+	private static ImageView btnSlide;
+	public  static ListView articlesListView;
+	public  static ListView chapterListView;
+	private static ViewPager swipePageView;	//Контейнер статей главы
+	private static LinearLayout container;
+	private static TextView chapterCaption;
 
 	private static ImageView menuButton = null;
 	private static ScrollView docInfo = null;
