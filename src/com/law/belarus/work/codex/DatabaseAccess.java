@@ -12,7 +12,6 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
 
 
 /**
@@ -71,6 +70,8 @@ public class DatabaseAccess {
 	private static int SQL_DOCINFO_TEXT;
 	
 	public static final int BOOKMARK_ALREADY_EXISTS = -1;
+	
+	public int CHAPTERS_COUNT;
 
 	/**
 	 * Конструктор, получаем доступ к файлу базы данных или создаём его, если он
@@ -83,7 +84,6 @@ public class DatabaseAccess {
 
 		Boolean db_exists = new File(dbPath).exists();
 		//Проверка на существование файла
-		//FIXME Добавить копирование закладок, при обновлении базы данных, сверяя версии баз данных
 		if (db_exists) {
 			try {
 				base = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
@@ -112,10 +112,9 @@ public class DatabaseAccess {
 						
 						//Копируем закладки в новую базу данных
 						if (temporary_bookmarks.size() != 0)
-							for (Article article : temporary_bookmarks){
-								Log.i(LogTag, " id: " + article.id);
+							for (Article article : temporary_bookmarks)
 								addBookmark(article.id);
-							}
+							
 					}
 						
 					
@@ -167,6 +166,8 @@ public class DatabaseAccess {
 		
 		Cursor docinfo = base.rawQuery(SQL_GET_DOCINFO, null); 
 		SQL_DOCINFO_TEXT = docinfo.getColumnIndex(DOCINFO_COLUMN_TEXT);
+		
+		CHAPTERS_COUNT = getChaptersList().size();
 
 	}
 
