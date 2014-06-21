@@ -126,7 +126,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			loadDocInfo();
 		else if (openedChapter != NOTHING_OPENED) {
 			chapterCaption.setText(db.getChapterTitleById(openedChapter));
-			loadPages(openedChapter, openedArticleInChapter);
+			loadPages(openedChapter, openedArticleInChapter, ViewUtils.DO_NOT_SLIDE);
 		}
 
 	}
@@ -316,8 +316,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 			if (isMenuVisible) {
 				if (articlesListView.getVisibility() == ListView.VISIBLE) {
-					articlesListView.startAnimation(AnimationUtils
-							.loadAnimation(this, R.anim.slide_out));
+					articlesListView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out));
 					articlesListView.setVisibility(ListView.INVISIBLE);
 				} else
 					btnSlide.performClick();
@@ -355,7 +354,10 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		return new OnClickListener() {
 
 			public void onClick(View v) {
-				onArticleItemClick(goToChapter, goToArticle);
+				if (goForward)
+					onArticleItemClick(goToChapter, goToArticle, ViewUtils.SLIDE_IN);
+				else
+					onArticleItemClick(goToChapter, goToArticle, ViewUtils.SLIDE_OUT);
 
 			}
 
@@ -425,7 +427,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 * @param chapter - Глава, которую необходимо загрузить
 	 * @param articleIndex - Номер статьи внутри главы
 	 */
-	public void loadPages(int chapter, int articleIndexOrMinusOneForLastItem) {
+	public void loadPages(int chapter, int articleIndexOrMinusOneForLastItem, int animation) {
 		
 		final int ONE_BECAUSE_WE_HAVE_ADDITIONAL_TRANSFER_PAGES = 1;
 
@@ -459,6 +461,14 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		pagesContainer.removeAllViews();
 
 		pagesContainer.addView(swipePageView);
+		
+//		articlesListView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out));
+		switch (animation){
+		case -1: swipePageView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.chapter_slide_out)); break;
+		case  1: swipePageView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.chapter_slide_in)); break;
+		}
+		
+		
 	}
 
 	
@@ -495,7 +505,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	/**
 	 * Реакция на выбор статьи в списке
 	 */
-	public void onArticleItemClick(int chapter, int article) {
+	public void onArticleItemClick(int chapter, int article, int useSlide) {
 		// Изменяем заголовок окна
 		chapterCaption.setText(db.getChapterTitleById(chapter));
 
@@ -505,7 +515,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		} else {
 			// Переход в другую статью
 			openedChapter = chapter;
-			loadPages(chapter, article);
+			loadPages(chapter, article, useSlide);
 			openedArticleInChapter = article;
 		}
 

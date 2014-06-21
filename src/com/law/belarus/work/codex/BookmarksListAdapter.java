@@ -52,7 +52,9 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 		//Задаём реакцию на нажатие по закладке, как на обычную статью в списке		
 		bookmarkLayout.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				ViewUtils.articleCallback.onArticleItemClick(bookmarks.get(position).chapter, MainActivity.db.getArticleOffsetInChapter(bookmarks.get(position).id));
+				ViewUtils.articleCallback.onArticleItemClick(bookmarks.get(position).chapter, 
+															 MainActivity.db.getArticleOffsetInChapter(bookmarks.get(position).id),
+															 ViewUtils.DO_NOT_SLIDE);
 			}
 		});
 		

@@ -52,6 +52,10 @@ public class ViewUtils {
 	public static final float PERCENT = 0.85f;
 	private static final int PLUS_ONE_FOR_BOOKMARKS = 1;
 	
+	public static final int DO_NOT_SLIDE = 0;
+	public static final int SLIDE_IN     = 1;
+	public static final int SLIDE_OUT    = -1;
+	
 	public static ArticleItemCallback articleCallback = null;
 	
     public ViewUtils(ArticleItemCallback articleCallback) {
@@ -196,7 +200,7 @@ public void initListViewChapters(Context context, final ListView listView, int l
 
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					articleCallback.onArticleItemClick(openedChapter - MINUS_ONE_FOR_BOOKMARKS, position);
+					articleCallback.onArticleItemClick(openedChapter - MINUS_ONE_FOR_BOOKMARKS, position, ViewUtils.DO_NOT_SLIDE);
 				}
 			});
 		} else {
