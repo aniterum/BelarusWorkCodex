@@ -5,6 +5,17 @@
     android:layout_gravity="center"
     android:orientation="vertical" >
 
+    <TextView
+        android:tag="go_next_chapter_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:clickable="false"
+        android:text="@string/test_text_next_chapter"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <Button
         style="?android:attr/buttonStyleInset"
         android:layout_width="wrap_content"

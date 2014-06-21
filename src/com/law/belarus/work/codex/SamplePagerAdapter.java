@@ -9,7 +9,7 @@ import android.view.View;
 
 public class SamplePagerAdapter extends PagerAdapter{
     
-    List<View> pages = null;
+    public List<View> pages = null;
     
     public SamplePagerAdapter(List<View> pages){
         this.pages = pages;

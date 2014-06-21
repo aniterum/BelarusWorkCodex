@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.ClipboardManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,7 +39,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	public  static ListView articlesListView;
 	public  static ListView chapterListView;
 	private static ViewPager swipePageView;	//Контейнер статей главы
-	private static LinearLayout container;
+	private static LinearLayout pagesContainer;
 	private static TextView chapterCaption;
 
 	private static ImageView menuButton = null;
@@ -111,7 +113,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		setContentView(scrollView);
 
-		container = (LinearLayout) app.findViewById(R.id.pagesContainer);
+		pagesContainer = (LinearLayout) app.findViewById(R.id.pagesContainer);
 		chapterCaption = (TextView) app.findViewById(R.id.caption_text);
 
 		viewUtils = new ViewUtils(this);
@@ -218,19 +220,31 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 */
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
-
+		
 		switch (item.getItemId()) {
 
 		// == Меню - Добавить закладку ==
 		case R.id.menu_add_bookmark: {
-			if ((openedArticleInChapter == NOTHING_OPENED)	| (openedArticleInChapter == OPENED_DOC_INFO))
-				Toast.makeText(this, R.string.why_do_you_want_this,	Toast.LENGTH_LONG).show();
+			
+			if ((openedArticleInChapter == NOTHING_OPENED) | (openedArticleInChapter == OPENED_DOC_INFO))
+				makeToast(R.string.why_do_you_want_this);
 			else {
-				int id = db.addBookmark(openedChapter, swipePageView.getCurrentItem());
-				if (id == DatabaseAccess.BOOKMARK_ALREADY_EXISTS)
-					Toast.makeText(this, R.string.bookmark_already_exists,Toast.LENGTH_LONG).show();
-				else
-					Toast.makeText(this, R.string.bookmark_added,Toast.LENGTH_LONG).show();
+
+				SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
+				Object tag = adapter.pages.get(swipePageView.getCurrentItem()).getTag();
+				int articleId = Integer.valueOf(tag.toString());
+				
+				if (articleId != NOTHING_OPENED){
+					
+					if (db.addBookmark(articleId) == DatabaseAccess.BOOKMARK_ALREADY_EXISTS)
+						makeToast(R.string.bookmark_already_exists);
+					else
+						makeToast(R.string.bookmark_added);
+					
+				}
+				else {
+					makeToast(R.string.why_do_you_want_this);
+				}
 			}
 			break;
 		}
@@ -259,19 +273,27 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		case R.id.menu_text_copy: {
 			try {
 				if ((openedArticleInChapter == NOTHING_OPENED)	| (openedArticleInChapter == OPENED_DOC_INFO))
-					Toast.makeText(this, R.string.can_not_copy_this, Toast.LENGTH_LONG).show();
+					makeToast(R.string.can_not_copy_this);
 				else{
 					
-					String textToCopy = db.getArticleTextByChapterAndOffset(openedChapter, swipePageView.getCurrentItem());
-					
-					if (textToCopy != null){
-						ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-						clipboard.setText(textToCopy);
-						Toast.makeText(this, R.string.text_copy_msg,Toast.LENGTH_LONG).show();
+					SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
+					Object tag = adapter.pages.get(swipePageView.getCurrentItem()).getTag();
+					int articleId = Integer.valueOf(tag.toString());
+
+					if (articleId != NOTHING_OPENED) {
+
+						String textToCopy = db.getArticleTextById(articleId);
+
+						if (textToCopy != null) {
+							ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+							clipboard.setText(textToCopy);
+							makeToast(R.string.text_copy_msg);
+						} else
+							makeToast(R.string.text_copy_msg_err);
+
 					}
 					else 
-						Toast.makeText(this, R.string.text_copy_msg_err,Toast.LENGTH_LONG).show();
-					
+						makeToast(R.string.can_not_copy_this);
 					
 				}
 				
@@ -354,19 +376,16 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		final String ARTICLE_START = "<b><i>Статья ";
 		final String ARTICLE_FIN = ". ";
 		final String ARTICLE_FIN2 = ".</i></b><br><br>";
+		
 		final String TEXT_ITEM_TAG = "textPageView";
 		final String BUTTON_NEXT_TAG = "go_next_chapter_button";
-		final  int   LAST_ARTICLE_INDEX = -1;
 
 		ArrayList<Article> articlesInChapter = db.getArticlesByChapter(chapter);
-		
-		
-		
-		
-		
+	
 		//Добавляем переход на предыдущую главу, только если глава не первая
 		if (chapter != 0){
 			View goPrevChapterItem = inflater.inflate(nextChapterLayout, null);
+			goPrevChapterItem.setTag(NOTHING_OPENED);
 			Button prevChapter = (Button) goPrevChapterItem.findViewWithTag(BUTTON_NEXT_TAG);
 			prevChapter.setOnClickListener(nextChapterOnClick(chapter, false));
 			pages.add(goPrevChapterItem);
@@ -379,13 +398,16 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
 												         + article.title + ARTICLE_FIN2
 												         + article.text.replace("\n", "<br><br>")));
+			//Для создания закладок
+			page.setTag(article.id);
 
 			pages.add(page);
 		}
 		
 		//Добавляем переход на следующую главу, если только эта глава не последняя
-		if (chapter + 1 != db.CHAPTERS_COUNT) {
+		if (chapter + 1 != DatabaseAccess.CHAPTERS_COUNT) {
 			View goNextChapterItem = inflater.inflate(nextChapterLayout, null);
+			goNextChapterItem.setTag(NOTHING_OPENED);
 			Button nextChapter = (Button) goNextChapterItem.findViewWithTag(BUTTON_NEXT_TAG);
 			nextChapter.setOnClickListener(nextChapterOnClick(chapter, true));
 			nextChapter.setText(R.string.arrow_to_right);
@@ -414,13 +436,13 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		swipePageView = new ViewPager(this);
 		swipePageView.setAdapter(pagerAdapter);
-		
+	
 		/*В первой главе не добавляется переход на предыдущую,
 		  поэтому и нет необходимости добавлять единицу к индексу  */
 		
 		switch (articleIndexOrMinusOneForLastItem) {
 		case -1:
-			if (chapter != db.CHAPTERS_COUNT - 1)
+			if (chapter != DatabaseAccess.CHAPTERS_COUNT - 1)
 				swipePageView.setCurrentItem(pages.size() - ONE_BECAUSE_WE_HAVE_ADDITIONAL_TRANSFER_PAGES * 2);
 			else
 				swipePageView.setCurrentItem(pages.size());
@@ -434,9 +456,9 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			break;
 		}		
 
-		container.removeAllViews();
+		pagesContainer.removeAllViews();
 
-		container.addView(swipePageView);
+		pagesContainer.addView(swipePageView);
 	}
 
 	
@@ -450,8 +472,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		
 		((TextView) docInfo.getChildAt(0)).setText(Html.fromHtml(db.getDocumentInfo().replace("\n", "<br>")));
 
-		container.removeAllViews();
-		container.addView(docInfo);
+		pagesContainer.removeAllViews();
+		pagesContainer.addView(docInfo);
 		chapterCaption.setText(getResources().getString(R.string.menu_info));
 	}
 	
@@ -465,8 +487,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		LayoutInflater docInfo = LayoutInflater.from(this);
 		LinearLayout l = (LinearLayout) docInfo.inflate(R.layout.start_screen, null);
 
-		container.removeAllViews();
-		container.addView(l);
+		pagesContainer.removeAllViews();
+		pagesContainer.addView(l);
 	}
 
 	
@@ -495,6 +517,14 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	
 	public void openMenu() {
 		this.openOptionsMenu();
+	}
+	
+	/**
+	 * Выводит сообщение на экран пользователя
+	 * @param resId - идентификатор ресурса в R
+	 */
+	public void makeToast(int resId){
+		Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
 	}
 
 	

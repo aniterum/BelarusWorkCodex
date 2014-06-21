@@ -71,7 +71,7 @@ public class DatabaseAccess {
 	
 	public static final int BOOKMARK_ALREADY_EXISTS = -1;
 	
-	public int CHAPTERS_COUNT;
+	public static int CHAPTERS_COUNT;
 
 	/**
 	 * Конструктор, получаем доступ к файлу базы данных или создаём его, если он
@@ -491,31 +491,24 @@ public class DatabaseAccess {
 
 	}
 	
+	public String getArticleTextById(int articleId){
+		
+		final String SQL_QUERY = SQL_GET_ARTICLES + WHERE + COLUMN_ID + EQUAL + articleId;
+		
+		Cursor cursor = base.rawQuery(SQL_QUERY, null);
+		cursor.moveToFirst();
+
+		if (cursor.getCount() == 0)
+			return null;
+		
+		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
+		
+	}
+	
+	
+	
 }
 
-
-//public int getArticleOffsetInChapter(int id) {
-//// потому что использующийся сейчас метод будет очень медленным при большом количестве статей.
-//// или использовать какое-нибудь SQL выражение для поиска
-//
-//final String SQL_QUERY = SQL_GET_ARTICLES + WHERE + COLUMN_ID + EQUAL + id;
-//
-//Cursor article = base.rawQuery(SQL_QUERY,	null);
-//article.moveToFirst();
-//int chapter = article.getInt(SQL_ARTICLE_CHAPTER);
-//
-//ArrayList<Article> articles = this.getArticlesByChapter(chapter);
-//
-//int i = 0;
-//for (Article art : articles) {
-//	if (art.id == id)
-//		break;
-//	else
-//		i++;
-//}
-//
-//return i;
-//}
 
 
 
