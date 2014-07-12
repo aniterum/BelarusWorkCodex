@@ -3,7 +3,6 @@ package com.law.belarus.work.codex;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -56,9 +55,7 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 				int chapter = bookmarks.get(position).chapter;
 				int offset  = bookmarks.get(position).offset;
 				
-				ViewUtils.articleCallback.onArticleItemClick(chapter, 
-															 offset,
-															 ViewUtils.DO_NOT_SLIDE);
+				ViewUtils.articleCallback.onArticleItemClick(chapter, offset, ViewUtils.DO_NOT_SLIDE);
 			}
 		});
 		

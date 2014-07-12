@@ -22,6 +22,7 @@ import android.database.sqlite.SQLiteException;
  */
 public class DatabaseAccess {
 
+	@SuppressWarnings("unused")
 	private static final String LogTag = "DatabaseAccess";
 	private static final String SQLITE_ERROR_MSG = "!Ошибка при загрузке!";
 	public static SQLiteDatabase base;
@@ -59,7 +60,6 @@ public class DatabaseAccess {
 	private static int SQL_ARTICLE_TEXT;
 	@SuppressWarnings("unused")
 	private static int SQL_ARTICLE_BOOKMARK;
-	@SuppressWarnings("unused")
 	private static int SQL_ARTICLE_OFFSET;
 	
 	private static final String SQL_GET_CHAPTERS = "select * from " + TABLE_NAME_CHAPTERS;
@@ -435,19 +435,19 @@ public class DatabaseAccess {
 	
 
 	
-	/**
-	 * Получаем номер статьи в разделе относительно начала, используя колонку OFFSET 
-	 * @param id - Номер статьи
-	 */
-	public int getArticleOffsetInChapter(int id) {
-		
-		final String SQL_QUERY = SELECT + ARTICLE_COLUMN_OFFSET + FROM + TABLE_NAME_ARTICLES + WHERE + COLUMN_ID + EQUAL + id;
-		
-		Cursor article = base.rawQuery(SQL_QUERY,	null);
-		article.moveToFirst();
-		return article.getInt(0);
-		
-	}
+//	/**
+//	 * Получаем номер статьи в разделе относительно начала, используя колонку OFFSET 
+//	 * @param id - Номер статьи
+//	 */
+//	public int getArticleOffsetInChapter(int id) {
+//		
+//		final String SQL_QUERY = SELECT + ARTICLE_COLUMN_OFFSET + FROM + TABLE_NAME_ARTICLES + WHERE + COLUMN_ID + EQUAL + id;
+//		
+//		Cursor article = base.rawQuery(SQL_QUERY,	null);
+//		article.moveToFirst();
+//		return article.getInt(0);
+//		
+//	}
 	
 	/**
 	 * Поиск текста в статьях
@@ -477,20 +477,25 @@ public class DatabaseAccess {
 		return result;
 	}
 	
-	public String getArticleTextByChapterAndOffset(int chapter, int offset){
-		
-		final String SQL_QUERY = SQL_GET_ARTICLES + WHERE + "(" + COLUMN_CHAPTER + EQUAL + chapter + AND + ARTICLE_COLUMN_OFFSET + EQUAL + offset + ")";
-		
-		Cursor cursor = base.rawQuery(SQL_QUERY, null);
-		cursor.moveToFirst();
-
-		if (cursor.getCount() == 0)
-			return null;
-		
-		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
-
-	}
+//	public String getArticleTextByChapterAndOffset(int chapter, int offset){
+//		
+//		final String SQL_QUERY = SQL_GET_ARTICLES + WHERE + "(" + COLUMN_CHAPTER + EQUAL + chapter + AND + ARTICLE_COLUMN_OFFSET + EQUAL + offset + ")";
+//		
+//		Cursor cursor = base.rawQuery(SQL_QUERY, null);
+//		cursor.moveToFirst();
+//
+//		if (cursor.getCount() == 0)
+//			return null;
+//		
+//		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
+//
+//	}
 	
+	/**
+	 * Возвращает текст статьи
+	 * @param articleId
+	 * @return
+	 */
 	public String getArticleTextById(int articleId){
 		
 		final String SQL_QUERY = SQL_GET_ARTICLES + WHERE + COLUMN_ID + EQUAL + articleId;
@@ -504,6 +509,8 @@ public class DatabaseAccess {
 		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
 		
 	}
+	
+	
 	
 	
 	

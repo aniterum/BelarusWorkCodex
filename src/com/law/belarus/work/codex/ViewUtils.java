@@ -24,10 +24,10 @@ package com.law.belarus.work.codex;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,19 +37,16 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 /**
- * Utility methods for Views.
+ * Методы для работы с View.
  */
-
-
 
 
 public class ViewUtils {
 	
-	public static final String CHAPTER_NAME = "ch";
-	public static final String CHAPTER_ID = "ch_id";
-	public static final String ARTICLES_IN_CHAPTER = "art";
-	public static int    openedChapter = -1;
-	public static final float PERCENT = 0.85f;
+	private static final String CHAPTER_NAME = "ch";
+	private static final String CHAPTER_ID = "ch_id";
+	private static final String ARTICLES_IN_CHAPTER = "art";
+	private static final float PERCENT = 0.85f;
 	private static final int PLUS_ONE_FOR_BOOKMARKS = 1;
 	
 	public static final int DO_NOT_SLIDE = 0;
@@ -58,10 +55,19 @@ public class ViewUtils {
 	
 	public static ArticleItemCallback articleCallback = null;
 	
-    public ViewUtils(ArticleItemCallback articleCallback) {
+	public static Animation Animation_Slide_In;
+	public static Animation Animation_Slide_Out;
+	private static Context ParentContext;
+	
+	public static int    openedChapter = -1;
+	
+    public ViewUtils(ArticleItemCallback articleCallback, Context context) {
     	
     	ViewUtils.articleCallback = articleCallback; //Ссылка на вызов функции из главной активности
-
+    	        
+        Animation_Slide_In = AnimationUtils.loadAnimation(context, R.anim.slide_in);
+        Animation_Slide_Out = AnimationUtils.loadAnimation(context, R.anim.slide_out);
+        ParentContext = context;
    }
 
     public static void setViewWidths(View view, View[] views) {
@@ -138,17 +144,16 @@ public void initListViewChapters(Context context, final ListView listView, int l
         // Задаём реакцию списка глав на нажатие -----------------------------------------------------------
         listView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Context context = view.getContext();
                 
                 if (position==0){
                 	//Нажаты ЗАКЛАДКИ
                 	if (MainActivity.db.getBookmarks() == null){
                 		 if (articleListView.getVisibility() == ListView.VISIBLE){
-                			articleListView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_out));
-                     		articleListView.setVisibility(ListView.INVISIBLE);
+                			 articleListView.startAnimation(Animation_Slide_Out);
+                     		 articleListView.setVisibility(ListView.INVISIBLE);
                 		 }
                 		 else
-                			 Toast.makeText(context, R.string.you_have_no_bookmarks, Toast.LENGTH_SHORT).show();
+                			 Toast.makeText(ParentContext, R.string.you_have_no_bookmarks, Toast.LENGTH_SHORT).show();
                 		
                 		return;
                 	}
@@ -174,14 +179,13 @@ public void initListViewChapters(Context context, final ListView listView, int l
 						break;
 					}
 
-					ViewUtils.initListViewArticles(context, articleListView, use_layout, position);
+					ViewUtils.initListViewArticles(ParentContext, articleListView, use_layout, position);
 					articleListView.setVisibility(ListView.VISIBLE);
-					articleListView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_in));
+					articleListView.startAnimation(Animation_Slide_In);
 					openedChapter = position;
 					
 				} else {
-
-					articleListView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_out));
+					articleListView.startAnimation(Animation_Slide_Out);
 					articleListView.setVisibility(ListView.INVISIBLE);
 					openedChapter = position;
 				}
@@ -218,6 +222,7 @@ public void initListViewChapters(Context context, final ListView listView, int l
 		}
 
 	}
+	
 }
 
     

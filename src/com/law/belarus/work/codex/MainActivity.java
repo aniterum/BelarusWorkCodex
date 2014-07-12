@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.ClipboardManager;
 import android.text.Html;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -37,21 +36,19 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	private static View menu;
 	private static View app;
 	private static ImageView btnSlide;
-	public  static ListView articlesListView;
-	public  static ListView chapterListView;
+	public  static ListView  articlesListView;
+	public  static ListView  chapterListView;
 	private static ViewPager swipePageView;	//Контейнер статей главы
+	private static TextView  chapterCaption;
 	private static LinearLayout pagesContainer;
-	private static TextView chapterCaption;
-
 	private static ImageView menuButton = null;
 	private static ScrollView docInfo = null;
 
-	int btnWidth;
-	// public static DataContainer data = null;
+//	private int btnWidth;
 	private static ViewUtils viewUtils;
 
-	public static int NOTHING_OPENED = -1;
-	public static int OPENED_DOC_INFO = -2;
+	public static final int NOTHING_OPENED = -1;
+	public static final int OPENED_DOC_INFO = -2;
 
 	private static int openedChapter = NOTHING_OPENED;
 	private static int openedArticleInChapter = NOTHING_OPENED;
@@ -62,18 +59,24 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 	private static boolean isMenuVisible = false;
 
-	private static String TAG = "t";
+	
 
 	private static final String DB_NAME = "codex.db";
 	public static String FILES_DIR;
 	public static DatabaseAccess db;
+	
 
 	private static final String VOTE_URL = "https://docs.google.com/spreadsheet/viewform?formkey=dFFtU3RwT2FIUjNqOHZDWVhSc09NSWc6MQ#gid=0";
-
+	private static final String TAG = "t";
+	
+	private static final Time time = new Time();
+	private static long lastBackButtonPress = 0;
+	public static final int BACK_PRESS_TIME = 2000;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		FILES_DIR = getBaseContext().getFilesDir().getPath() + "/" + DB_NAME;
 
 		if (db == null)
@@ -117,7 +120,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		pagesContainer = (LinearLayout) app.findViewById(R.id.pagesContainer);
 		chapterCaption = (TextView) app.findViewById(R.id.caption_text);
 
-		viewUtils = new ViewUtils(this);
+		viewUtils = new ViewUtils(this, this);
 
 		chapterListView = (ListView) menu.findViewById(R.id.list);
 
@@ -317,13 +320,26 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 			if (isMenuVisible) {
 				if (articlesListView.getVisibility() == ListView.VISIBLE) {
-					articlesListView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out));
+					articlesListView.startAnimation(ViewUtils.Animation_Slide_Out);
 					articlesListView.setVisibility(ListView.INVISIBLE);
-				} else
+				} else {
+
 					btnSlide.performClick();
+
+				}
+					
 			} else {
 
-				super.onKeyDown(keyCode, event);
+				//Нажата кнопка НАЗАД при свернутом меню статей
+				time.setToNow();
+
+				if ((time.toMillis(true) - lastBackButtonPress) < BACK_PRESS_TIME) {
+					super.onKeyDown(keyCode, event);
+				} else {
+					lastBackButtonPress = time.toMillis(true);
+					makeToastShort(R.string.press_back_for_exit);
+				}
+
 			}
 
 		}
@@ -339,6 +355,12 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		return true;
 	}
 
+	/**
+	 * Создает OnClickListener для кнопки перехода
+	 * @param currentChapter
+	 * @param goForward - true-для перехода вперед, false-дназад
+	 * @return Обработчик нажатия на кнопку перехода к другой главе из текущей
+	 */
 	private OnClickListener nextChapterOnClick(final int currentChapter, final boolean goForward) {
 
 		final int goToChapter;
@@ -428,7 +450,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			caption.setText(R.string.go_next_chapter);
 			
 			nextChapter.setOnClickListener(nextChapterOnClick(chapter, true));
-			//nextChapter.setText(R.string.arrow_to_right);
 			pages.add(goNextChapterItem);
 		}
 		
@@ -557,6 +578,10 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 */
 	public void makeToast(int resId){
 		Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
+	}
+	
+	public void makeToastShort(int resId){
+		Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
 	}
 
 	

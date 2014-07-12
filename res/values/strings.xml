@@ -1,5 +1,6 @@
 <resources> 
 
+    <string name="app_prefix">Job</string>
     <string name="app_name">ТК РБ</string>
     <string name="app_caption">Трудовой кодекс Республики Беларусь</string>
     
@@ -13,11 +14,11 @@
     
     <string name="text_copy_msg">Текст скопирован</string>
     <string name="text_copy_msg_err">Ошибка копирования</string>
+    <string name="press_back_for_exit">Нажмите снова для выхода</string>
     
     <string name="dialog_email">Отправить сообщение разработчику</string>
     <string name="dialog_email_who_are_you">Представитесь?</string>
     <string name="dialog_email_message_text">Можете писать что угодно :)</string>
-    <string name="email_prefix">Job</string>
     
     <string name="you_have_no_bookmarks">У вас нет закладок</string>
     <string name="bookmark_already_exists">Эта статья уже есть в ваших закладках!</string>
