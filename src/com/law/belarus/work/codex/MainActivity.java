@@ -337,7 +337,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 					super.onKeyDown(keyCode, event);
 				} else {
 					lastBackButtonPress = time.toMillis(true);
-					makeToastShort(R.string.press_back_for_exit);
+					makeToast(R.string.press_back_for_exit);
 				}
 
 			}
@@ -577,12 +577,9 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 * @param resId - идентификатор ресурса в R
 	 */
 	public void makeToast(int resId){
-		Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
-	}
-	
-	public void makeToastShort(int resId){
 		Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
 	}
+
 
 	
 	// @Override
