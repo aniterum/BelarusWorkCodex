@@ -6,10 +6,10 @@
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_help" />
     
-    <item android:id="@+id/menu_vote"
+<!--      <item android:id="@+id/menu_vote"
         android:title="@string/menu_vote"
         android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_agenda" />
+        android:icon="@android:drawable/ic_menu_agenda" />-->
     
     <item android:id="@+id/menu_text_copy"
         android:title="@string/menu_text_copy"

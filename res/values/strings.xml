@@ -4,7 +4,7 @@
     <string name="app_name">ТК РБ</string>
     <string name="app_caption">Трудовой кодекс Республики Беларусь</string>
     
-    <string name="menu_email">Есть хорошая идея? Нашли ошибку?</string>
+    <string name="menu_email">Есть хорошая идея?</string>
     <string name="menu_vote">Голосование</string>
     <string name="menu_info">О документе</string>
     <string name="menu_add_bookmark">Добавить закладку</string>
