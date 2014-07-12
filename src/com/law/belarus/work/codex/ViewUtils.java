@@ -57,6 +57,7 @@ public class ViewUtils {
 	
 	public static Animation Animation_Slide_In;
 	public static Animation Animation_Slide_Out;
+	public static Animation Animation_Delete;
 	private static Context ParentContext;
 	
 	public static int    openedChapter = -1;
@@ -67,9 +68,8 @@ public class ViewUtils {
     	        
         Animation_Slide_In = AnimationUtils.loadAnimation(context, R.anim.slide_in);
         Animation_Slide_Out = AnimationUtils.loadAnimation(context, R.anim.slide_out);
+        Animation_Delete = AnimationUtils.loadAnimation(context, R.anim.delete);
         ParentContext = context;
-        
-        
         
    }
 
@@ -220,7 +220,7 @@ public void initListViewChapters(Context context, final ListView listView, int l
 				return;
 
 			// Создаём список, содержащий статьи в закладках
-			listView.setAdapter(new BookmarksListAdapter(context, R.layout.bookmark_list_item, bookmarks, listView));
+			listView.setAdapter(new BookmarksListAdapter(context, R.layout.bookmark_list_item, bookmarks));
 
 		}
 

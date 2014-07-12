@@ -230,9 +230,10 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		// == Меню - Добавить закладку ==
 		case R.id.menu_add_bookmark: {
 			
-			if ((openedArticleInChapter == NOTHING_OPENED) | (openedArticleInChapter == OPENED_DOC_INFO))
-				makeToast(R.string.why_do_you_want_this);
-			else {
+				if (swipePageView == null){
+					makeToast(R.string.why_do_you_want_this);
+					return true;
+				}
 
 				SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
 				Object tag = adapter.pages.get(swipePageView.getCurrentItem()).getTag();
@@ -248,7 +249,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 				}
 				else {
 					makeToast(R.string.why_do_you_want_this);
-				}
 			}
 			break;
 		}
@@ -276,9 +276,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		// == Меню - Копировать текст статьи ==
 		case R.id.menu_text_copy: {
 			try {
-				if ((openedArticleInChapter == NOTHING_OPENED)	| (openedArticleInChapter == OPENED_DOC_INFO))
+				
+				if (swipePageView == null){
 					makeToast(R.string.can_not_copy_this);
-				else{
+					return true;
+				}
 					
 					SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
 					Object tag = adapter.pages.get(swipePageView.getCurrentItem()).getTag();
@@ -299,8 +301,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 					else 
 						makeToast(R.string.can_not_copy_this);
 					
-				}
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -443,6 +443,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			View goNextChapterItem = inflater.inflate(nextChapterLayout, null);
 			goNextChapterItem.setTag(NOTHING_OPENED);
 			ImageButton nextChapter = (ImageButton) goNextChapterItem.findViewWithTag(BUTTON_NEXT_TAG);
+			nextChapter.setImageResource(R.drawable.ic_menu_forward);
 			
 			
 			TextView caption = (TextView) goNextChapterItem.findViewWithTag(CAPTION_NEXT_TAG);
@@ -514,6 +515,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		openedChapter = OPENED_DOC_INFO;
 		openedArticleInChapter = NOTHING_OPENED;
+		
+		swipePageView = null;
 
 		docInfo = (ScrollView) inflater.inflate(R.layout.article_page, null);
 		
