@@ -25,6 +25,7 @@
     <string name="can_not_copy_this">Что же вы хотите скопировать здесь?</string>
     <string name="bookmark_added">Статья добавлена в закладки</string>
     <string name="delete_bookmark_x">× </string>
+    
     <string name="arrow_to_right">></string>
     <string name="arrow_to_left">&lt;</string>
 	
@@ -32,11 +33,11 @@
 	<string name="msg_send_error">При передаче данных произошла ошибка. Проверьте интернет-соединение и повторите</string>
 	<string name="msg_you_forgot">Вы забыли написать сообщение :)</string>
 	<string name="msg_send_in_progress">Отправка сообщения</string>
-	    
+	
+	<string name="go_next_chapter" >Следующая глава</string>	
+	<string name="go_prev_chapter" >Предыдущая глава</string>	    
     
 	<string name="test_chapter">123</string>
-	<string name="test_text_next_chapter">Перейти к главе 1 Общие положения</string>
-	
 
     <string name="db_version">18888e8d9e6c2d85408cf97bd0cbb7bddbc0bd7c</string>
     

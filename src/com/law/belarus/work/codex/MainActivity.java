@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -375,12 +376,16 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 */
 	public void makePages(List<View> pages, LayoutInflater inflater, int pageLayout, int nextChapterLayout, int chapter) {
 
+		
+		final String BR = "<br>";
+		
 		final String ARTICLE_START = "<b><i>Статья ";
 		final String ARTICLE_FIN = ". ";
-		final String ARTICLE_FIN2 = ".</i></b><br><br>";
+		final String ARTICLE_FIN2 = ".</i></b>" + BR + BR;
 		
 		final String TEXT_ITEM_TAG = "textPageView";
 		final String BUTTON_NEXT_TAG = "go_next_chapter_button";
+		final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
 
 		ArrayList<Article> articlesInChapter = db.getArticlesByChapter(chapter);
 	
@@ -388,7 +393,12 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		if (chapter != 0){
 			View goPrevChapterItem = inflater.inflate(nextChapterLayout, null);
 			goPrevChapterItem.setTag(NOTHING_OPENED);
-			Button prevChapter = (Button) goPrevChapterItem.findViewWithTag(BUTTON_NEXT_TAG);
+			ImageButton prevChapter = (ImageButton) goPrevChapterItem.findViewWithTag(BUTTON_NEXT_TAG);
+			
+			TextView caption = (TextView) goPrevChapterItem.findViewWithTag(CAPTION_NEXT_TAG);
+			
+			caption.setText(R.string.go_prev_chapter);
+			
 			prevChapter.setOnClickListener(nextChapterOnClick(chapter, false));
 			pages.add(goPrevChapterItem);
 		}
@@ -399,8 +409,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			TextView textView = (TextView) page.findViewWithTag(TEXT_ITEM_TAG);
 			textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
 												         + article.title + ARTICLE_FIN2
-												         + article.text.replace("\n", "<br><br>")));
-			//Для создания закладок
+												         + article.text.replace("\n", BR + BR)));
+			//Для создания закладок и копирования текста
 			page.setTag(article.id);
 
 			pages.add(page);
@@ -410,9 +420,15 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		if (chapter + 1 != DatabaseAccess.CHAPTERS_COUNT) {
 			View goNextChapterItem = inflater.inflate(nextChapterLayout, null);
 			goNextChapterItem.setTag(NOTHING_OPENED);
-			Button nextChapter = (Button) goNextChapterItem.findViewWithTag(BUTTON_NEXT_TAG);
+			ImageButton nextChapter = (ImageButton) goNextChapterItem.findViewWithTag(BUTTON_NEXT_TAG);
+			
+			
+			TextView caption = (TextView) goNextChapterItem.findViewWithTag(CAPTION_NEXT_TAG);
+			
+			caption.setText(R.string.go_next_chapter);
+			
 			nextChapter.setOnClickListener(nextChapterOnClick(chapter, true));
-			nextChapter.setText(R.string.arrow_to_right);
+			//nextChapter.setText(R.string.arrow_to_right);
 			pages.add(goNextChapterItem);
 		}
 		
@@ -506,15 +522,21 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 * Реакция на выбор статьи в списке
 	 */
 	public void onArticleItemClick(int chapter, int article, int useSlide) {
-		// Изменяем заголовок окна
-		chapterCaption.setText(db.getChapterTitleById(chapter));
 
 		if (chapter == openedChapter) {
 			// Переход необходим внутри текущей главы
-			swipePageView.setCurrentItem(article);
+			
+			switch (chapter){
+			case 0: swipePageView.setCurrentItem(article); break;
+			// Поправка на страницы перехода в другие главы
+			default: swipePageView.setCurrentItem(article + 1); break;
+			}
+
 		} else {
 			// Переход в другую статью
 			openedChapter = chapter;
+			// Изменяем заголовок окна
+			chapterCaption.setText(db.getChapterTitleById(chapter));
 			loadPages(chapter, article, useSlide);
 			openedArticleInChapter = article;
 		}

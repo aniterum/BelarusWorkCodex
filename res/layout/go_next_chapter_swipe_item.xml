@@ -6,22 +6,31 @@
     android:orientation="vertical" >
 
     <TextView
-        android:tag="go_next_chapter_caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:clickable="false"
-        android:text="@string/test_text_next_chapter"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:tag="go_next_chapter_caption"
+        android:text="@string/go_next_chapter"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold" />
 
-    <Button
-        style="?android:attr/buttonStyleInset"
+    <!--  <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="150sp"
+        android:layout_height="150sp"
+        android:layout_gravity="center"
+        android:tag="go_next_chapter_button"
+        android:text="@string/arrow_to_left" /> -->
+
+    <ImageButton
+        android:id="@+id/imageButton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:tag="go_next_chapter_button"
-        android:text="@string/arrow_to_left" />
+        android:src="@android:drawable/ic_media_rew"
+        android:tag="go_next_chapter_button" />
 
 </LinearLayout>

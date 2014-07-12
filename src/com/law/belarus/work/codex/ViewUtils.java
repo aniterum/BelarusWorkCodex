@@ -120,12 +120,12 @@ public void initListViewChapters(Context context, final ListView listView, int l
         		context, 
         		chapterInfo, 
         		layout, 
-        		new String[]{ 			 // Список хеш-ключей
+        new String[]{ 			 		 // Список хеш-ключей
         		CHAPTER_NAME,         	 // Название главый
         		ARTICLES_IN_CHAPTER,	 // Какие статьи есть в главе
         		CHAPTER_ID				 // Номер Главы
                 }, 
-                new int[]{				 // Значения хеш-ключей
+        new int[]{				 		 // Значения хеш-ключей
                 R.id.chapter_menu_title, // Тут id TextBox'a в list.xml
                 R.id.chapter_menu_articles,
                 R.id.chapter_menu_id});    

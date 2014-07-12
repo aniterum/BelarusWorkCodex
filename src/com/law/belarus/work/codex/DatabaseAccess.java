@@ -220,7 +220,7 @@ public class DatabaseAccess {
 
 		ArrayList<Article> result = new ArrayList<Article>();
 		do {
-			result.add(new Article(cursor.getInt(SQL_ARTICLE_ID), cursor.getInt(SQL_ARTICLE_CHAPTER), cursor.getString(SQL_ARTICLE_TITLE), cursor.getString(SQL_ARTICLE_TEXT)));
+			result.add(new Article(cursor.getInt(SQL_ARTICLE_ID), cursor.getInt(SQL_ARTICLE_CHAPTER), cursor.getString(SQL_ARTICLE_TITLE), cursor.getString(SQL_ARTICLE_TEXT), cursor.getInt(SQL_ARTICLE_OFFSET)));
 
 		} while (cursor.moveToNext());
 
@@ -425,7 +425,7 @@ public class DatabaseAccess {
 
 		ArrayList<Article> result = new ArrayList<Article>();
 		do {
-			result.add(new Article(ret.getInt(SQL_ARTICLE_ID), ret.getInt(SQL_ARTICLE_CHAPTER), ret.getString(SQL_ARTICLE_TITLE), ret.getString(SQL_ARTICLE_TEXT)));
+			result.add(new Article(ret.getInt(SQL_ARTICLE_ID), ret.getInt(SQL_ARTICLE_CHAPTER), ret.getString(SQL_ARTICLE_TITLE), ret.getString(SQL_ARTICLE_TEXT), ret.getInt(SQL_ARTICLE_OFFSET)));
 
 		} while (ret.moveToNext());
 

@@ -9,6 +9,7 @@ public class Article {
 	public final int chapter;
 	public final String title;
 	public final String text;
+	public final int offset;
 	
 /**
  * Конструктор класса
@@ -17,12 +18,13 @@ public class Article {
  * @param title - Название статьи
  * @param text - Текст статьи
  */
-	Article(int id, int chapter, String title, String text){
+	Article(int id, int chapter, String title, String text, int offset){
 		
 		this.id = id;
 		this.chapter = chapter;
 		this.title = title;
 		this.text = text;
+		this.offset = offset;
 		
 		
 	}

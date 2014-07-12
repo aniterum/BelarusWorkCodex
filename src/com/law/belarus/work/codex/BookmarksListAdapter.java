@@ -2,8 +2,8 @@ package com.law.belarus.work.codex;
 
 import java.util.ArrayList;
 
-
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -52,8 +52,12 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 		//Задаём реакцию на нажатие по закладке, как на обычную статью в списке		
 		bookmarkLayout.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				ViewUtils.articleCallback.onArticleItemClick(bookmarks.get(position).chapter, 
-															 MainActivity.db.getArticleOffsetInChapter(bookmarks.get(position).id),
+				
+				int chapter = bookmarks.get(position).chapter;
+				int offset  = bookmarks.get(position).offset;
+				
+				ViewUtils.articleCallback.onArticleItemClick(chapter, 
+															 offset,
 															 ViewUtils.DO_NOT_SLIDE);
 			}
 		});
@@ -65,7 +69,7 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 				bookmarks.remove(position);
 				
 				try {
-					// Скрываем итак невидимый список статей, для того, чтобы не было одного лишнего нажатия
+					// Скрываем и так невидимый список статей, для того, чтобы не было одного лишнего нажатия
 					if (bookmarks.size() == 0)
 						MainActivity.articlesListView.setVisibility(ListView.INVISIBLE);
 					
