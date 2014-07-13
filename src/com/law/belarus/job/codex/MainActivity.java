@@ -5,13 +5,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -66,12 +65,27 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	public static DatabaseAccess db;
 	
 
-	private static final String VOTE_URL = "https://docs.google.com/spreadsheet/viewform?formkey=dFFtU3RwT2FIUjNqOHZDWVhSc09NSWc6MQ#gid=0";
-	private static final String TAG = "t";
+	//private static final String VOTE_URL = "https://docs.google.com/spreadsheet/viewform?formkey=dFFtU3RwT2FIUjNqOHZDWVhSc09NSWc6MQ#gid=0";
+	private static final String MENU_BUTTON_TAG = "MENU_BUTTON_TAG";
 	
 	private static final Time time = new Time();
 	private static long lastBackButtonPress = 0;
 	public static final int BACK_PRESS_TIME = 2000;
+	
+	public static final int BLACK_TEXT_ON_WHITE = 1;
+	public static final int WHITE_TEXT_ON_BLACK = 2;
+	
+	public static int COLOR_SCHEME = 2;
+	
+	public final String BR = "<br>";
+	
+	public final String ARTICLE_START = "<b><i>Статья ";
+	public final String ARTICLE_FIN = ". ";
+	public final String ARTICLE_FIN2 = ".</i></b>" + BR + BR;
+	
+	public final String TEXT_ITEM_TAG = "textPageView";
+	public final String BUTTON_NEXT_TAG = "go_next_chapter_button";
+	public final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +105,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		menu = inflater.inflate(R.layout.horz_scroll_menu, null);
 		app = inflater.inflate(R.layout.horz_scroll_app_with_articles, null);
 
-		menuButton = (ImageView) app.findViewWithTag(TAG);
+		menuButton = (ImageView) app.findViewWithTag(MENU_BUTTON_TAG);
 		menuButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -259,6 +273,14 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			startActivityForResult(intent, 0);
 			break;
 		}
+		
+		// == Меню - Изменить цветовую схему ==
+		case R.id.menu_color_toggle: {
+
+			ColorToggle();
+
+			break;
+		}
 
 //		// == Меню - Голосование ==
 //		case R.id.menu_vote: {
@@ -397,18 +419,21 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 * @param chapter - нужная глава
 	 */
 	public void makePages(List<View> pages, LayoutInflater inflater, int pageLayout, int nextChapterLayout, int chapter) {
-
 		
-		final String BR = "<br>";
+		int backGroundColor = Color.WHITE;
+		int textColor = Color.BLACK;
 		
-		final String ARTICLE_START = "<b><i>Статья ";
-		final String ARTICLE_FIN = ". ";
-		final String ARTICLE_FIN2 = ".</i></b>" + BR + BR;
+		switch (COLOR_SCHEME){
+		case BLACK_TEXT_ON_WHITE : 
+			backGroundColor = Color.WHITE;
+			textColor = Color.BLACK;
+			break;
+		case WHITE_TEXT_ON_BLACK :
+			backGroundColor = Color.BLACK;
+			textColor = Color.WHITE;
+			break;
+		}
 		
-		final String TEXT_ITEM_TAG = "textPageView";
-		final String BUTTON_NEXT_TAG = "go_next_chapter_button";
-		final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
-
 		ArrayList<Article> articlesInChapter = db.getArticlesByChapter(chapter);
 	
 		//Добавляем переход на предыдущую главу, только если глава не первая
@@ -422,6 +447,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			caption.setText(R.string.go_prev_chapter);
 			
 			prevChapter.setOnClickListener(nextChapterOnClick(chapter, false));
+			
+			//Цвет фона и букв
+			goPrevChapterItem.setBackgroundColor(backGroundColor);
+			caption.setTextColor(textColor);
+			
 			pages.add(goPrevChapterItem);
 		}
 
@@ -429,9 +459,15 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			
 			View page = inflater.inflate(pageLayout, null);
 			TextView textView = (TextView) page.findViewWithTag(TEXT_ITEM_TAG);
+			
+			//Цвет фона и текста
+			textView.setTextColor(textColor);
+			page.setBackgroundColor(backGroundColor);
+			
 			textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
 												         + article.title + ARTICLE_FIN2
 												         + article.text.replace("\n", BR + BR)));
+			
 			//Для создания закладок и копирования текста
 			page.setTag(article.id);
 
@@ -451,6 +487,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			caption.setText(R.string.go_next_chapter);
 			
 			nextChapter.setOnClickListener(nextChapterOnClick(chapter, true));
+			
+			//Цвет фона и букв
+			goNextChapterItem.setBackgroundColor(backGroundColor);
+			caption.setTextColor(textColor);
+			
 			pages.add(goNextChapterItem);
 		}
 		
@@ -510,7 +551,9 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	}
 
 	
-	
+	/*
+	 * Выводим на экран текст изменений закона
+	 */
 	public void loadDocInfo() {
 
 		openedChapter = OPENED_DOC_INFO;
@@ -520,7 +563,18 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		docInfo = (ScrollView) inflater.inflate(R.layout.article_page, null);
 		
-		((TextView) docInfo.getChildAt(0)).setText(Html.fromHtml(db.getDocumentInfo().replace("\n", "<br>")));
+		TextView text = (TextView)docInfo.findViewWithTag(TEXT_ITEM_TAG);
+		text.setText(Html.fromHtml(db.getDocumentInfo().replace("\n", "<br>")));
+		
+		switch (COLOR_SCHEME){
+		case BLACK_TEXT_ON_WHITE : 
+			text.setTextColor(Color.BLACK);
+			docInfo.setBackgroundColor(Color.WHITE);
+			break;
+		case WHITE_TEXT_ON_BLACK :
+			
+			break;
+		}
 
 		pagesContainer.removeAllViews();
 		pagesContainer.addView(docInfo);
@@ -583,7 +637,58 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
 	}
 
+/**
+ * Переключает цветовую схему и меняет цвета всех страниц
+ */
+	public void ColorToggle(){
+		
+		if (swipePageView == null)
+			return;
+		
+		//Переключаем цветовую схему
+		if (COLOR_SCHEME == BLACK_TEXT_ON_WHITE)
+			COLOR_SCHEME = WHITE_TEXT_ON_BLACK;
+		else
+			COLOR_SCHEME = BLACK_TEXT_ON_WHITE;
+		
+		int backGroundColor = Color.WHITE;
+		int textColor = Color.BLACK;
+		
+		switch (COLOR_SCHEME){
+		case BLACK_TEXT_ON_WHITE : 
+			backGroundColor = Color.WHITE;
+			textColor = Color.BLACK;
+			break;
+		case WHITE_TEXT_ON_BLACK :
+			backGroundColor = Color.BLACK;
+			textColor = Color.WHITE;
+			break;
+		}
+		
+		swipePageView.setBackgroundColor(backGroundColor);
+		pagesContainer.setBackgroundColor(backGroundColor);
+		SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
 
+		for (View v : adapter.pages) {
+			TextView textView = (TextView) v.findViewWithTag(TEXT_ITEM_TAG);
+
+			if (textView != null) {
+				// Цвет фона и текста
+
+				textView.setTextColor(textColor);
+				v.setBackgroundColor(backGroundColor);
+
+			} else {
+				TextView caption = (TextView) v.findViewWithTag(CAPTION_NEXT_TAG);
+				if (caption != null) {
+					v.setBackgroundColor(backGroundColor);
+					caption.setTextColor(textColor);
+				}
+			}
+		}
+		
+		adapter.notifyDataSetChanged();
+	}
 	
 	// @Override
 	// protected void onPause() {

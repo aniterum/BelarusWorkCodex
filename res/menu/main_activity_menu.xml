@@ -16,6 +16,11 @@
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_menu_edit" />
     
+    <item android:id="@+id/menu_color_toggle"
+        android:title="@string/menu_color_toggle"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_view" />
+    
     <item android:id="@+id/menu_info"
         android:title="@string/menu_info"
         android:orderInCategory="100"

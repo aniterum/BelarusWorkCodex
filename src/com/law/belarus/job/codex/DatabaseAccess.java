@@ -58,7 +58,6 @@ public class DatabaseAccess {
 	private static int SQL_ARTICLE_CHAPTER;
 	private static int SQL_ARTICLE_TITLE;
 	private static int SQL_ARTICLE_TEXT;
-	@SuppressWarnings("unused")
 	private static int SQL_ARTICLE_BOOKMARK;
 	private static int SQL_ARTICLE_OFFSET;
 	
