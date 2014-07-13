@@ -27,7 +27,7 @@ for line_idx in range(len(chapters)):
 #С помощью генератора получаем список имён всех глав
 chapters_names_temp = [chapters[idx][chapters[idx].find(". ")+2:] for idx in chapters_idx]
 #Помещаем все имена в словарь, добавляя порядковый номер
-chapters_names = [{"id":i, "title":chapters_names_temp[i]} for i in range(len(chapters_names_temp))]
+chapters_names = [{"id":i, "title":chapters_names_temp[i].upper()} for i in range(len(chapters_names_temp))]
 
 
 articles_in_chapters_list = []

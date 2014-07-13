@@ -1,8 +1,8 @@
 <resources> 
 
-    <string name="app_prefix">Job</string>
-    <string name="app_name">ТК РБ</string>
-    <string name="app_caption">Трудовой кодекс Республики Беларусь</string>
+    <string name="app_prefix">Crime</string>
+    <string name="app_name">УК РБ</string>
+    <string name="app_caption">Уголовный кодекс Республики Беларусь</string>
     
     <string name="menu_email">Есть хорошая идея?</string>
     <string name="menu_vote">Голосование</string>
@@ -41,7 +41,7 @@
     
 	<string name="test_chapter">123</string>
 
-    <string name="db_version">3f587debc6f44f979ebe02b293c9a6a417a78cc7</string>
+    <string name="db_version">dc9b2828125545992dcb08e974902c6d0a192129</string>
     
     
 </resources>
