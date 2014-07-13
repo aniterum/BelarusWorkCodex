@@ -18,10 +18,10 @@ articles   = [line.strip() for line in allLines[divisor[1]+1:] if line != line.u
 
 #===========================================================================================
 
-#Получаем номер строк, в которых есть слово ГЛАВА или РАЗДЕЛ VI. (это заключительные положения)
+#Получаем номер строк, в которых есть слово ГЛАВА или РАЗДЕЛ XV. (это заключительные положения)
 chapters_idx = []
 for line_idx in range(len(chapters)):
-    if (chapters[line_idx].startswith("ГЛАВА") or chapters[line_idx].startswith("РАЗДЕЛ VI.")):
+    if (chapters[line_idx].startswith("ГЛАВА") or chapters[line_idx].startswith("РАЗДЕЛ ХV")):
         chapters_idx.append(line_idx)
 
 #С помощью генератора получаем список имён всех глав
@@ -43,6 +43,7 @@ for idx in chapters_idx:
     articles_in_chapters_list.append(articles_index)
 
 
+
 chapterID = 0
 chapters_dict = {}
 for articles_ in articles_in_chapters_list:
@@ -57,13 +58,11 @@ for articles_ in articles_in_chapters_list:
     chapterID += 1
     
 
-
 #===========================================================================================
-
 
 articles_idx = []
 for line_idx in range(len(articles)):
-    if articles[line_idx].startswith("Статья"):
+    if (articles[line_idx].startswith("Статья") or articles[line_idx].startswith("#Примечания")):
         articles_idx.append(line_idx)
 
 
