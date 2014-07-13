@@ -76,7 +76,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	public static final int WHITE_TEXT_ON_BLACK = 2;
 	
 	public static int COLOR_SCHEME = 2;
-	
+	 
 	public final String BR = "<br>";
 	
 	public final String ARTICLE_START = "<b><i>Статья ";
