@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package com.law.belarus.job.codex;
+package com.law.belarus.crime.codex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
