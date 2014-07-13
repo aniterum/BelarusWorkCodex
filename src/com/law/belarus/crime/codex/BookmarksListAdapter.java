@@ -77,7 +77,12 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 			if (bookmarkShortText.length() > BOOKMARK_MAX_LENGTH)
 				bookmarkShortText = bookmarkShortText.substring(0, BOOKMARK_CUT_LENGTH) + BOOKMARK_CUT_END;
 			
-			holder.bookmarkText.setText(ARTICLE_START + bookmarks.get(position).id + NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
+			int bookmarkArticleId = bookmarks.get(position).id;
+			if ((bookmarkArticleId > DatabaseAccess.MIN_NOTE_ID) & (bookmarkArticleId < DatabaseAccess.MAX_NOTE_ID))
+				//Задаём текст названия статьи с поправкой на Примечания
+				holder.bookmarkText.setText(bookmarkShortText + " главы " + (bookmarks.get(position).chapter + 1));	
+			else
+				holder.bookmarkText.setText(ARTICLE_START + bookmarks.get(position).id + NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
 
 			
 			//Задаём реакцию на нажатие по закладке, как на обычную статью в списке		

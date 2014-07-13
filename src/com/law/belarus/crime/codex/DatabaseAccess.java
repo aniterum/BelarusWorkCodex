@@ -71,6 +71,9 @@ public class DatabaseAccess {
 	public static final int BOOKMARK_ALREADY_EXISTS = -1;
 	
 	public static int CHAPTERS_COUNT;
+	
+	public static final int MIN_NOTE_ID = 1000;
+	public static final int MAX_NOTE_ID = 1040;
 
 	/**
 	 * Конструктор, получаем доступ к файлу базы данных или создаём его, если он
@@ -243,8 +246,14 @@ public class DatabaseAccess {
 			return null;
 		
 		ArrayList<String> result = new ArrayList<String>();
+		int article_id;
 			do {
-				result.add(ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ".\n" + cursor.getString(SQL_ARTICLE_TITLE)); // Формируем название в стиле "Статья 43.\nНазвание статьи"
+				article_id = cursor.getInt(SQL_ARTICLE_ID);
+				//Поправка для оформления в списке статей, т.к. Примечание статьёй не является
+				if ((article_id > MIN_NOTE_ID) & (article_id < MAX_NOTE_ID))
+					result.add("\n" + cursor.getString(SQL_ARTICLE_TITLE) + "\n"); // Формируем название в стиле "Статья 43.\nНазвание статьи"
+				else
+					result.add(ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ".\n" + cursor.getString(SQL_ARTICLE_TITLE));
 
 			} while (cursor.moveToNext());
 
@@ -280,6 +289,12 @@ public class DatabaseAccess {
 			
 			articles.moveToFirst();
 			firstArticle = articles.getInt(0);	//Узнаём ID первой статьи в этой главе
+			
+			//Для оформления чтобы у Примечаний не было номера статьи
+			if ((firstArticle > MIN_NOTE_ID) & (firstArticle < MAX_NOTE_ID)){
+				articles.moveToNext();
+				firstArticle = articles.getInt(0);
+			}
 			
 			articles.moveToLast();
 			lastArticle = articles.getInt(0);	//Узнаём ID последней статьи в этой главе

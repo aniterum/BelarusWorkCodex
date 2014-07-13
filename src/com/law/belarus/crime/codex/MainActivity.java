@@ -79,9 +79,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 
 	public final String BR = "<br>";
 	
-	public final String ARTICLE_START = "<b><i>Статья ";
+	public static final String BI_START = "<b><i>";
+	public static final String BI_END = "</i></b>";
+	public final String ARTICLE_START = BI_START + "Статья ";
 	public final String ARTICLE_FIN = ". ";
-	public final String ARTICLE_FIN2 = ".</i></b>" + BR + BR;
+	public final String ARTICLE_FIN2 = ARTICLE_FIN + BI_END + BR + BR;
 	
 	public final String TEXT_ITEM_TAG = "textPageView";
 	public final String BUTTON_NEXT_TAG = "go_next_chapter_button";
@@ -463,10 +465,14 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			//Цвет фона и текста
 			textView.setTextColor(textColor);
 			page.setBackgroundColor(backGroundColor);
-			
-			textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
-												         + article.title + ARTICLE_FIN2
-												         + article.text.replace("\n", BR + BR)));
+
+			if ((article.id > DatabaseAccess.MIN_NOTE_ID) & (article.id < DatabaseAccess.MAX_NOTE_ID))
+				textView.setText(Html.fromHtml(BI_START + article.title + ARTICLE_FIN2
+				         								+ article.text.replace("\n", BR + BR)));
+			else
+				textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
+												             + article.title + ARTICLE_FIN2
+												             + article.text.replace("\n", BR + BR)));
 			
 			//Для создания закладок и копирования текста
 			page.setTag(article.id);
