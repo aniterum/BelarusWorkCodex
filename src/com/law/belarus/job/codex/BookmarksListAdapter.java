@@ -3,6 +3,7 @@ package com.law.belarus.job.codex;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -77,7 +78,10 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 			if (bookmarkShortText.length() > BOOKMARK_MAX_LENGTH)
 				bookmarkShortText = bookmarkShortText.substring(0, BOOKMARK_CUT_LENGTH) + BOOKMARK_CUT_END;
 			
-			holder.bookmarkText.setText(ARTICLE_START + bookmarks.get(position).id + NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
+			if (bookmarks.get(position).extra_id.equals(""))
+				holder.bookmarkText.setText(ARTICLE_START + bookmarks.get(position).id + NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
+			else
+				holder.bookmarkText.setText(Html.fromHtml(ARTICLE_START + bookmarks.get(position).extra_id + NEW_LINE + bookmarkShortText));
 
 			
 			//Задаём реакцию на нажатие по закладке, как на обычную статью в списке		
