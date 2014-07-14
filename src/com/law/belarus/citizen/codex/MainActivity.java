@@ -454,7 +454,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			
 			pages.add(goPrevChapterItem);
 		}
-
+  
 		for (Article article : articlesInChapter) {
 			
 			View page = inflater.inflate(pageLayout, null);

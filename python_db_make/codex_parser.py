@@ -44,6 +44,13 @@ for idx in chapters_idx:
 EXTRA_NAME = "%s<sup>%s</sup>"
 EXTRA_SPLITER = "|"
 
+#Поправка для номеров, которые другим способом будет долго обходить
+EXTRA_NAMES_CORRECTOR = { "4710":[47,1],
+                          "5110":[51,1],
+                         "11510":[115,1],
+                         "11520":[115,2]
+                        }
+
 chapterID = 0
 chapters_dict = {}
 for articles_ in articles_in_chapters_list:
@@ -52,7 +59,11 @@ for articles_ in articles_in_chapters_list:
         if (art.find(EXTRA_SPLITER) != -1):
             idx = art.split(".")[0].split(" ")[1].replace(EXTRA_SPLITER, "")
 
-            i, f = art.split(".")[0].split(" ")[1].split(EXTRA_SPLITER)
+            if (idx in EXTRA_NAMES_CORRECTOR.keys()):
+                i, f = EXTRA_NAMES_CORRECTOR[idx]
+            else:
+                i, f = art.split(".")[0].split(" ")[1].split(EXTRA_SPLITER)
+                
             extra_name = EXTRA_NAME % (i, f)
             
             chapters_dict[idx] = [str(chapterID), offset, extra_name]
