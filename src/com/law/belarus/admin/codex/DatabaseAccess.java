@@ -244,7 +244,7 @@ public class DatabaseAccess {
 		
 		ArrayList<String> result = new ArrayList<String>();
 			do {
-				result.add(ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ".\n" + cursor.getString(SQL_ARTICLE_TITLE)); // Формируем название в стиле "Статья 43.\nНазвание статьи"
+				result.add(ARTICLE + ViewUtils.makeArticleIdString(cursor.getInt(SQL_ARTICLE_ID)) + "\n" + cursor.getString(SQL_ARTICLE_TITLE)); // Формируем название в стиле "Статья 43.\nНазвание статьи"
 
 			} while (cursor.moveToNext());
 
@@ -505,7 +505,7 @@ public class DatabaseAccess {
 		if (cursor.getCount() == 0)
 			return null;
 		
-		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
+		return ARTICLE + ViewUtils.makeArticleIdString(cursor.getInt(SQL_ARTICLE_ID)) + " " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
 		
 	}
 	

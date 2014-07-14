@@ -23,7 +23,7 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 	private static final String DELETE_TAG = "DELETE_TAG";
 	private static final String TITLE_LAYOUT_TAG = "TITLE_LAYOUT";
 	private static final String ARTICLE_START = "Статья ";
-	private static final String NEW_LINE = ".\n";
+	private static final String NEW_LINE = "\n";
 //	private static final int ANIMATION_DURATION = 250;
 	
 	private static final int BOOKMARK_MAX_LENGTH = 45;
@@ -77,8 +77,9 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 			if (bookmarkShortText.length() > BOOKMARK_MAX_LENGTH)
 				bookmarkShortText = bookmarkShortText.substring(0, BOOKMARK_CUT_LENGTH) + BOOKMARK_CUT_END;
 			
-			holder.bookmarkText.setText(ARTICLE_START + bookmarks.get(position).id + NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
-
+		holder.bookmarkText.setText(ARTICLE_START
+				+ ViewUtils.makeArticleIdString(bookmarks.get(position).id)
+				+ NEW_LINE + bookmarkShortText); // Задаём текст названия статьи
 			
 			//Задаём реакцию на нажатие по закладке, как на обычную статью в списке		
 			holder.bookmarkLayout.setOnClickListener(new OnClickListener(){

@@ -116,7 +116,9 @@ public void initListViewChapters(Context context, final ListView listView, int l
         for (Chapter chapter : chaptersList){
      	   hm = new HashMap<String, Object>();
      	   hm.put(CHAPTER_NAME, chapter.title);                 
-     	   hm.put(ARTICLES_IN_CHAPTER, "ст." + chapter.firstArticle + "-" + chapter.lastArticle);         
+			hm.put(ARTICLES_IN_CHAPTER, 
+							"ст." + ViewUtils.makeArticleIdString(chapter.firstArticle)
+							+ "-" + ViewUtils.makeArticleIdString(chapter.lastArticle));
      	   if (chapter.id < 9)
      		   hm.put(CHAPTER_ID, " " + (chapter.id + PLUS_ONE_FOR_BOOKMARKS));
      	   else
@@ -224,6 +226,20 @@ public void initListViewChapters(Context context, final ListView listView, int l
 
 		}
 
+	}
+	
+	//Для отображения числа вида 13.5 вместо 13005 в номере статьи
+	public static String makeArticleIdString(int id){
+		
+		final String DOT = ".";
+		final int DIVISOR = 1000;
+		
+		int i = id / DIVISOR;
+		int f = id - i * DIVISOR;
+		
+		return i + DOT + f;
+		
+		
 	}
 	
 }

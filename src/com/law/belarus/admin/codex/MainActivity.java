@@ -80,7 +80,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	public final String BR = "<br>";
 	
 	public final String ARTICLE_START = "<b><i>Статья ";
-	public final String ARTICLE_FIN = ". ";
+	public final String ARTICLE_FIN = " ";
 	public final String ARTICLE_FIN2 = ".</i></b>" + BR + BR;
 	
 	public final String TEXT_ITEM_TAG = "textPageView";
@@ -455,6 +455,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			pages.add(goPrevChapterItem);
 		}
 
+	
 		for (Article article : articlesInChapter) {
 			
 			View page = inflater.inflate(pageLayout, null);
@@ -464,7 +465,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			textView.setTextColor(textColor);
 			page.setBackgroundColor(backGroundColor);
 			
-			textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
+			textView.setText(Html.fromHtml(ARTICLE_START + ViewUtils.makeArticleIdString(article.id) + ARTICLE_FIN
 												         + article.title + ARTICLE_FIN2
 												         + article.text.replace("\n", BR + BR)));
 			
