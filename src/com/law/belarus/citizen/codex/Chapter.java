@@ -1,4 +1,4 @@
-package com.law.belarus.job.codex;
+package com.law.belarus.citizen.codex;
 
 /**
  * Класс - контейнер информации о конкретной главе

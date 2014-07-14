@@ -19,7 +19,7 @@
  * limitations under the License.
  * #L%
  */
-package com.law.belarus.job.codex;
+package com.law.belarus.citizen.codex;
 
 import android.content.Context;
 import android.os.Handler;
