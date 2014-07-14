@@ -116,7 +116,7 @@ public void initListViewChapters(Context context, final ListView listView, int l
         for (Chapter chapter : chaptersList){
      	   hm = new HashMap<String, Object>();
      	   hm.put(CHAPTER_NAME, chapter.title);                 
-     	   hm.put(ARTICLES_IN_CHAPTER, "ст." + chapter.firstArticle + "-" + chapter.lastArticle);         
+     	   hm.put(ARTICLES_IN_CHAPTER, "ст." + ViewUtils.FormatArticleId(chapter.firstArticle) + "-" + ViewUtils.FormatArticleId(chapter.lastArticle));         
      	   if (chapter.id < 9)
      		   hm.put(CHAPTER_ID, " " + (chapter.id + PLUS_ONE_FOR_BOOKMARKS));
      	   else
@@ -224,6 +224,22 @@ public void initListViewChapters(Context context, final ListView listView, int l
 
 		}
 
+	}
+	
+	//Поправка на особенности кодекса, а именно на статьи типа 114.1 которые имеют id 1141
+	public static String FormatArticleId(int id){
+		final int FROM_ID = 1100;
+		final int DIVISOR = 10;
+		final String DOT = ".";
+		
+		if (id > FROM_ID) {
+			int i = id / DIVISOR;
+			int f = id - i * DIVISOR;
+			return i + DOT + f;
+		}
+		
+		else
+			return id+"";
 	}
 	
 }

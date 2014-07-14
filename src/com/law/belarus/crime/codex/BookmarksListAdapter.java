@@ -82,7 +82,8 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 				//Задаём текст названия статьи с поправкой на Примечания
 				holder.bookmarkText.setText(bookmarkShortText + " главы " + (bookmarks.get(position).chapter + 1));	
 			else
-				holder.bookmarkText.setText(ARTICLE_START + bookmarks.get(position).id + NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
+				holder.bookmarkText.setText(ARTICLE_START + ViewUtils.FormatArticleId(bookmarkArticleId) 
+						+ NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
 
 			
 			//Задаём реакцию на нажатие по закладке, как на обычную статью в списке		

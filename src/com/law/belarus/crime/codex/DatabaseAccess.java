@@ -253,7 +253,7 @@ public class DatabaseAccess {
 				if ((article_id > MIN_NOTE_ID) & (article_id < MAX_NOTE_ID))
 					result.add("\n" + cursor.getString(SQL_ARTICLE_TITLE) + "\n"); // Формируем название в стиле "Статья 43.\nНазвание статьи"
 				else
-					result.add(ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ".\n" + cursor.getString(SQL_ARTICLE_TITLE));
+					result.add(ARTICLE + ViewUtils.FormatArticleId(cursor.getInt(SQL_ARTICLE_ID)) + ".\n" + cursor.getString(SQL_ARTICLE_TITLE));
 
 			} while (cursor.moveToNext());
 
@@ -520,7 +520,7 @@ public class DatabaseAccess {
 		if (cursor.getCount() == 0)
 			return null;
 		
-		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
+		return ARTICLE + ViewUtils.FormatArticleId(cursor.getInt(SQL_ARTICLE_ID)) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
 		
 	}
 	

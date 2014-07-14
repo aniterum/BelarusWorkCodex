@@ -470,7 +470,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 				textView.setText(Html.fromHtml(BI_START + article.title + ARTICLE_FIN2
 				         								+ article.text.replace("\n", BR + BR)));
 			else
-				textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
+				textView.setText(Html.fromHtml(ARTICLE_START + ViewUtils.FormatArticleId(article.id) + ARTICLE_FIN
 												             + article.title + ARTICLE_FIN2
 												             + article.text.replace("\n", BR + BR)));
 			
