@@ -465,14 +465,15 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			//Цвет фона и текста
 			textView.setTextColor(textColor);
 			page.setBackgroundColor(backGroundColor);
-
-			if ((article.id > DatabaseAccess.MIN_NOTE_ID) & (article.id < DatabaseAccess.MAX_NOTE_ID))
-				textView.setText(Html.fromHtml(BI_START + article.title + ARTICLE_FIN2
-				         								+ article.text.replace("\n", BR + BR)));
-			else
-				textView.setText(Html.fromHtml(ARTICLE_START + ViewUtils.FormatArticleId(article.id) + ARTICLE_FIN
-												             + article.title + ARTICLE_FIN2
+			 
+			if (article.extra_id.equals(""))
+				textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
+															 + article.title + ARTICLE_FIN2
 												             + article.text.replace("\n", BR + BR)));
+			else
+				textView.setText(Html.fromHtml(ARTICLE_START + article.extra_id    + ARTICLE_FIN
+						 									 + article.title + ARTICLE_FIN2
+						 									 + article.text.replace("\n", BR + BR)));
 			
 			//Для создания закладок и копирования текста
 			page.setTag(article.id);

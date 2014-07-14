@@ -12,6 +12,8 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.text.Html;
+import android.text.Spanned;
 
 
 /**
@@ -48,6 +50,7 @@ public class DatabaseAccess {
 	private static final String ARTICLE_COLUMN_TEXT = "ARTICLE_TEXT";
 	private static final String ARTICLE_COLUMN_BOOKMARK = "IN_BOOKMARKS";
 	private static final String ARTICLE_COLUMN_OFFSET = "OFFSET";
+	private static final String ARTICLE_COLUMN_EXTRA_ID = "EXTRA_ID";
 	private static final String DOCINFO_COLUMN_TEXT = "INFO";
 	private static final String DOCINFO_COLUMN_VERSION = "VERSION";
 	
@@ -60,6 +63,7 @@ public class DatabaseAccess {
 	private static int SQL_ARTICLE_TEXT;
 	private static int SQL_ARTICLE_BOOKMARK;
 	private static int SQL_ARTICLE_OFFSET;
+	private static int SQL_ARTICLE_EXTRA_ID;
 	
 	private static final String SQL_GET_CHAPTERS = "select * from " + TABLE_NAME_CHAPTERS;
 	private static int SQL_CHAPTER_ID;
@@ -161,6 +165,7 @@ public class DatabaseAccess {
 		SQL_ARTICLE_TEXT	 = articles.getColumnIndex(ARTICLE_COLUMN_TEXT);
 		SQL_ARTICLE_BOOKMARK = articles.getColumnIndex(ARTICLE_COLUMN_BOOKMARK);
 		SQL_ARTICLE_OFFSET   = articles.getColumnIndex(ARTICLE_COLUMN_OFFSET);
+		SQL_ARTICLE_EXTRA_ID   = articles.getColumnIndex(ARTICLE_COLUMN_EXTRA_ID);
 		
 		Cursor chapters = base.rawQuery(SQL_GET_CHAPTERS, null);
 		SQL_CHAPTER_ID    = chapters.getColumnIndex(COLUMN_ID);
@@ -222,7 +227,7 @@ public class DatabaseAccess {
 
 		ArrayList<Article> result = new ArrayList<Article>();
 		do {
-			result.add(new Article(cursor.getInt(SQL_ARTICLE_ID), cursor.getInt(SQL_ARTICLE_CHAPTER), cursor.getString(SQL_ARTICLE_TITLE), cursor.getString(SQL_ARTICLE_TEXT), cursor.getInt(SQL_ARTICLE_OFFSET)));
+			result.add(new Article(cursor.getInt(SQL_ARTICLE_ID), cursor.getInt(SQL_ARTICLE_CHAPTER), cursor.getString(SQL_ARTICLE_TITLE), cursor.getString(SQL_ARTICLE_TEXT), cursor.getInt(SQL_ARTICLE_OFFSET), cursor.getString(SQL_ARTICLE_EXTRA_ID)));
 
 		} while (cursor.moveToNext());
 
@@ -234,7 +239,7 @@ public class DatabaseAccess {
 	 * Загрузить массив названий статей из нужной главы
 	 * @param chapter - Номер главы
 	 */
-	public ArrayList<String> getArticlesTitlesByChapter(int chapter) {
+	public ArrayList<Spanned> getArticlesTitlesByChapter(int chapter) {
 
 		
 		final String SQL_QUERY = SQL_GET_ARTICLES + WHERE + COLUMN_CHAPTER + EQUAL + chapter;
@@ -245,15 +250,12 @@ public class DatabaseAccess {
 		if (cursor.getCount() == 0)
 			return null;
 		
-		ArrayList<String> result = new ArrayList<String>();
-		int article_id;
+		ArrayList<Spanned> result = new ArrayList<Spanned>();
 			do {
-				article_id = cursor.getInt(SQL_ARTICLE_ID);
-				//Поправка для оформления в списке статей, т.к. Примечание статьёй не является
-				if ((article_id > MIN_NOTE_ID) & (article_id < MAX_NOTE_ID))
-					result.add("\n" + cursor.getString(SQL_ARTICLE_TITLE) + "\n"); // Формируем название в стиле "Статья 43.\nНазвание статьи"
+				if (cursor.getString(SQL_ARTICLE_EXTRA_ID).equals(""))
+					result.add(Html.fromHtml(ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ".<br>" + cursor.getString(SQL_ARTICLE_TITLE))); // Формируем название в стиле "Статья 43.\nНазвание статьи"
 				else
-					result.add(ARTICLE + ViewUtils.FormatArticleId(cursor.getInt(SQL_ARTICLE_ID)) + ".\n" + cursor.getString(SQL_ARTICLE_TITLE));
+					result.add(Html.fromHtml(ARTICLE + cursor.getString(SQL_ARTICLE_EXTRA_ID) + ".<br>" + cursor.getString(SQL_ARTICLE_TITLE)));
 
 			} while (cursor.moveToNext());
 
@@ -439,7 +441,7 @@ public class DatabaseAccess {
 
 		ArrayList<Article> result = new ArrayList<Article>();
 		do {
-			result.add(new Article(ret.getInt(SQL_ARTICLE_ID), ret.getInt(SQL_ARTICLE_CHAPTER), ret.getString(SQL_ARTICLE_TITLE), ret.getString(SQL_ARTICLE_TEXT), ret.getInt(SQL_ARTICLE_OFFSET)));
+			result.add(new Article(ret.getInt(SQL_ARTICLE_ID), ret.getInt(SQL_ARTICLE_CHAPTER), ret.getString(SQL_ARTICLE_TITLE), ret.getString(SQL_ARTICLE_TEXT), ret.getInt(SQL_ARTICLE_OFFSET), ret.getString(SQL_ARTICLE_EXTRA_ID)));
 
 		} while (ret.moveToNext());
 
@@ -520,7 +522,7 @@ public class DatabaseAccess {
 		if (cursor.getCount() == 0)
 			return null;
 		
-		return ARTICLE + ViewUtils.FormatArticleId(cursor.getInt(SQL_ARTICLE_ID)) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
+		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
 		
 	}
 	

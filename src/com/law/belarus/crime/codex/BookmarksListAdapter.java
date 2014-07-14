@@ -3,6 +3,7 @@ package com.law.belarus.crime.codex;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -77,13 +78,22 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 			if (bookmarkShortText.length() > BOOKMARK_MAX_LENGTH)
 				bookmarkShortText = bookmarkShortText.substring(0, BOOKMARK_CUT_LENGTH) + BOOKMARK_CUT_END;
 			
-			int bookmarkArticleId = bookmarks.get(position).id;
-			if ((bookmarkArticleId > DatabaseAccess.MIN_NOTE_ID) & (bookmarkArticleId < DatabaseAccess.MAX_NOTE_ID))
-				//Задаём текст названия статьи с поправкой на Примечания
-				holder.bookmarkText.setText(bookmarkShortText + " главы " + (bookmarks.get(position).chapter + 1));	
+////<<<<<<< HEAD:src/com/law/belarus/crime/codex/BookmarksListAdapter.java
+//			int bookmarkArticleId = bookmarks.get(position).id;
+//			if ((bookmarkArticleId > DatabaseAccess.MIN_NOTE_ID) & (bookmarkArticleId < DatabaseAccess.MAX_NOTE_ID))
+//				//Задаём текст названия статьи с поправкой на Примечания
+//				holder.bookmarkText.setText(bookmarkShortText + " главы " + (bookmarks.get(position).chapter + 1));	
+//			else
+//				holder.bookmarkText.setText(ARTICLE_START + ViewUtils.FormatArticleId(bookmarkArticleId) 
+//						+ NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
+//=======
+			
+			
+			if (bookmarks.get(position).extra_id.equals(""))
+				holder.bookmarkText.setText(ARTICLE_START + bookmarks.get(position).id + NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
 			else
-				holder.bookmarkText.setText(ARTICLE_START + ViewUtils.FormatArticleId(bookmarkArticleId) 
-						+ NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
+				holder.bookmarkText.setText(Html.fromHtml(ARTICLE_START + bookmarks.get(position).extra_id + NEW_LINE + bookmarkShortText));
+//>>>>>>> master:src/com/law/belarus/job/codex/BookmarksListAdapter.java
 
 			
 			//Задаём реакцию на нажатие по закладке, как на обычную статью в списке		
