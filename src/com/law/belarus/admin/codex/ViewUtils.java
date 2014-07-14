@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -205,7 +206,7 @@ public void initListViewChapters(Context context, final ListView listView, int l
 
 		if (chapter != 0) {
 
-			listView.setAdapter(new ArrayAdapter<String>(context, layout, MainActivity.db.getArticlesTitlesByChapter(chapter - MINUS_ONE_FOR_BOOKMARKS)));
+			listView.setAdapter(new ArrayAdapter<Spanned>(context, layout, MainActivity.db.getArticlesTitlesByChapter(chapter - MINUS_ONE_FOR_BOOKMARKS)));
 
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

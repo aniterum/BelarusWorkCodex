@@ -42,21 +42,21 @@ for idx in chapters_idx:
     #Создаем list, состоящий из сгруппированных в list названиях статей
     articles_in_chapters_list.append(articles_index)
 
+EXTRA_NAME = "%s.%s"
+EXTRA_SPLITER = "|"
 
 chapterID = 0
 chapters_dict = {}
 for articles_ in articles_in_chapters_list:
     offset = 0
     for art in articles_:
-
         ch_idx = art.split(".")[0].split(" ")[1]
         art_idx = art.split(".")[1]
         idx = str(int(ch_idx) * 1000 + int(art_idx))
 
         #Добавляем в dict соотношение {ID статьи : [ID главы, сдвиг в главе]}
-        chapters_dict[idx] = [str(chapterID), offset]
+        chapters_dict[idx] = [str(chapterID), offset, EXTRA_NAME % (ch_idx, art_idx)]
         offset += 1
-
      
     chapterID += 1
     
@@ -101,12 +101,8 @@ for line_idx in articles_idx:
     ex = text.find("\nГлава")
     if ex != -1:
         text = text[:ex]
-
-
-    chapter = chapters_dict[article_id][0]
-    offset = chapters_dict[article_id][1]
-    articles_list_dict.append({"id":article_id, "chapter":chapter, "title":article_title.strip(), "text":text, "offset":offset})
-
+    
+    articles_list_dict.append({"id":article_id, "chapter":chapters_dict[article_id][0], "title":article_title.strip(), "text":text, "offset":chapters_dict[article_id][1], "extra_id":chapters_dict[article_id][2]})
 
 #===========================================================================================
 
@@ -123,11 +119,11 @@ os.system("rm ./" + dbFileName)
 db = sqlite3.connect(dbFileName)
 cur = db.cursor()
 
-CREATE_TABLE_ARTICLES = "CREATE TABLE Articles (ID UNSIGNED INT PRIMARY KEY, CHAPTER UNSIGNED INT, TITLE TINYTEXT, ARTICLE_TEXT TEXT, IN_BOOKMARKS INT, OFFSET INT)"
+CREATE_TABLE_ARTICLES = "CREATE TABLE Articles (ID UNSIGNED INT PRIMARY KEY, CHAPTER UNSIGNED INT, TITLE TINYTEXT, ARTICLE_TEXT TEXT, IN_BOOKMARKS INT, OFFSET INT, EXTRA_ID TINYTEXT)"
 CREATE_TABLE_CHAPTERS = "CREATE TABLE Chapters (ID UNSIGNED INT, TITLE TINYTEXT)"
 CREATE_TABLE_DOCINFO  = "CREATE TABLE Docinfo  (ID UNSIGNED INT, TITLE TINYTEXT, INFO TEXT, VERSION TINYTEXT)"
 
-INSERT_ARTICLE = "INSERT INTO Articles VALUES ('%(id)s', '%(chapter)s', '%(title)s', '%(text)s', '0', '%(offset)s')"
+INSERT_ARTICLE = "INSERT INTO Articles VALUES ('%(id)s', '%(chapter)s', '%(title)s', '%(text)s', '0', '%(offset)s', '%(extra_id)s')"
 INSERT_CHAPTER = "INSERT INTO Chapters VALUES ('%(id)s', '%(title)s')"
 INSERT_DOCINFO = "INSERT INTO Docinfo  VALUES ('%(zero)s', '%(title)s', '%(text)s', '%(version)s')"
 
