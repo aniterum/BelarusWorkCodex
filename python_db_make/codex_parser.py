@@ -13,15 +13,15 @@ for line_idx in range(len(allLines)):
         divisor.append(line_idx)
 
 codex_info = [line for line in allLines[:divisor[0]]] #if (line != "\n") ]
-chapters   = [line.strip() for line in allLines[divisor[0]+1:divisor[1]] if (line != "\n")]
+chapters   = [line.strip() for line in allLines[divisor[0]+1:divisor[1]] if ((line != "\n") and (not line.startswith("РАЗДЕЛ")))]
 articles   = [line.strip() for line in allLines[divisor[1]+1:] if line != line.upper() ]
 
 #===========================================================================================
 
-#Получаем номер строк, в которых есть слово ГЛАВА или РАЗДЕЛ VI. (это заключительные положения)
+#Получаем номер строк, в которых есть слово ГЛАВА или РАЗДЕЛ IV (это заключительные положения)
 chapters_idx = []
 for line_idx in range(len(chapters)):
-    if (chapters[line_idx].startswith("ГЛАВА") or chapters[line_idx].startswith("РАЗДЕЛ VI.")):
+    if (chapters[line_idx].startswith("ГЛАВА") or chapters[line_idx].startswith("РАЗДЕЛ ІV")):
         chapters_idx.append(line_idx)
 
 #С помощью генератора получаем список имён всех глав
@@ -48,7 +48,11 @@ chapters_dict = {}
 for articles_ in articles_in_chapters_list:
     offset = 0
     for art in articles_:
-        idx = art.split(".")[0].split(" ")[1]
+
+        ch_idx = art.split(".")[0].split(" ")[1]
+        art_idx = art.split(".")[1]
+        idx = str(int(ch_idx) * 1000 + int(art_idx))
+
         #Добавляем в dict соотношение {ID статьи : [ID главы, сдвиг в главе]}
         chapters_dict[idx] = [str(chapterID), offset]
         offset += 1
@@ -70,10 +74,17 @@ for line_idx in range(len(articles)):
 articles_list_dict = []
 for line_idx in articles_idx:
 
-    dot = articles[line_idx].find(".")
-    article_name = articles[line_idx][:dot]
-    article_title = articles[line_idx][dot+1:]
-    article_id = article_name.split(" ")[1]
+    line = articles[line_idx]
+
+    article_name, article_title = line.split(". ")
+    article_tempId = article_name.split(" ")[1]
+    i, f = article_tempId.split(".")
+    article_id = str(int(i)*1000 + int(f))
+
+#    dot = line.find(".")
+#    article_name = line[:dot]
+#    article_title = line[dot+1:]
+#    article_id = article_name.split(" ")[1]
     try:
         test_id = int(article_id)
     except:
@@ -91,9 +102,11 @@ for line_idx in articles_idx:
     if ex != -1:
         text = text[:ex]
 
-    
-    
-    articles_list_dict.append({"id":article_id, "chapter":chapters_dict[article_id][0], "title":article_title.strip(), "text":text, "offset":chapters_dict[article_id][1]})
+
+    chapter = chapters_dict[article_id][0]
+    offset = chapters_dict[article_id][1]
+    articles_list_dict.append({"id":article_id, "chapter":chapter, "title":article_title.strip(), "text":text, "offset":offset})
+
 
 #===========================================================================================
 
@@ -156,3 +169,5 @@ with open(file, "rt") as str_file:
 open(file, "wt").write("".join(result))
 
 os.system("cp -b ./codex.sqlite ../res/raw/codex.db")
+
+    
