@@ -1,4 +1,4 @@
-package com.law.belarus.job.codex;
+package com.law.belarus.voting.codex;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
