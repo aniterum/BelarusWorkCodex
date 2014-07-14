@@ -78,23 +78,13 @@ public class BookmarksListAdapter extends ArrayAdapter<Object> {
 			if (bookmarkShortText.length() > BOOKMARK_MAX_LENGTH)
 				bookmarkShortText = bookmarkShortText.substring(0, BOOKMARK_CUT_LENGTH) + BOOKMARK_CUT_END;
 			
-////<<<<<<< HEAD:src/com/law/belarus/crime/codex/BookmarksListAdapter.java
-//			int bookmarkArticleId = bookmarks.get(position).id;
-//			if ((bookmarkArticleId > DatabaseAccess.MIN_NOTE_ID) & (bookmarkArticleId < DatabaseAccess.MAX_NOTE_ID))
-//				//Задаём текст названия статьи с поправкой на Примечания
-//				holder.bookmarkText.setText(bookmarkShortText + " главы " + (bookmarks.get(position).chapter + 1));	
-//			else
-//				holder.bookmarkText.setText(ARTICLE_START + ViewUtils.FormatArticleId(bookmarkArticleId) 
-//						+ NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
-//=======
-			
-			
 			if (bookmarks.get(position).extra_id.equals(""))
 				holder.bookmarkText.setText(ARTICLE_START + bookmarks.get(position).id + NEW_LINE + bookmarkShortText);	//Задаём текст названия статьи
 			else
-				holder.bookmarkText.setText(Html.fromHtml(ARTICLE_START + bookmarks.get(position).extra_id + NEW_LINE + bookmarkShortText));
-//>>>>>>> master:src/com/law/belarus/job/codex/BookmarksListAdapter.java
-
+				if (bookmarks.get(position).extra_id.equals("@")) //Это примечание
+					holder.bookmarkText.setText(Html.fromHtml("Примечания к главе " + (bookmarks.get(position).chapter + 1) ));
+				else
+					holder.bookmarkText.setText(Html.fromHtml(ARTICLE_START + bookmarks.get(position).extra_id + NEW_LINE + bookmarkShortText));
 			
 			//Задаём реакцию на нажатие по закладке, как на обычную статью в списке		
 			holder.bookmarkLayout.setOnClickListener(new OnClickListener(){

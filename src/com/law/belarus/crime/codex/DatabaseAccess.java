@@ -254,8 +254,11 @@ public class DatabaseAccess {
 			do {
 				if (cursor.getString(SQL_ARTICLE_EXTRA_ID).equals(""))
 					result.add(Html.fromHtml(ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ".<br>" + cursor.getString(SQL_ARTICLE_TITLE))); // Формируем название в стиле "Статья 43.\nНазвание статьи"
-				else
-					result.add(Html.fromHtml(ARTICLE + cursor.getString(SQL_ARTICLE_EXTRA_ID) + ".<br>" + cursor.getString(SQL_ARTICLE_TITLE)));
+				else 
+					if (cursor.getString(SQL_ARTICLE_EXTRA_ID).equals("@")) //Примечание
+						result.add(Html.fromHtml("<br>" + cursor.getString(SQL_ARTICLE_TITLE) + "<br>"));
+					else
+						result.add(Html.fromHtml(ARTICLE + cursor.getString(SQL_ARTICLE_EXTRA_ID) + ".<br>" + cursor.getString(SQL_ARTICLE_TITLE)));
 
 			} while (cursor.moveToNext());
 

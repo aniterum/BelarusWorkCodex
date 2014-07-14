@@ -471,9 +471,14 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 															 + article.title + ARTICLE_FIN2
 												             + article.text.replace("\n", BR + BR)));
 			else
-				textView.setText(Html.fromHtml(ARTICLE_START + article.extra_id    + ARTICLE_FIN
-						 									 + article.title + ARTICLE_FIN2
-						 									 + article.text.replace("\n", BR + BR)));
+				if (article.extra_id.equals("@")) // Примечание
+					textView.setText(Html.fromHtml(BI_START + article.title + ARTICLE_FIN2
+															+ article.text.replace("\n", BR + BR)));
+				else
+					textView.setText(Html.fromHtml(ARTICLE_START + article.extra_id    + ARTICLE_FIN
+						 	 									 + article.title + ARTICLE_FIN2
+						 	 									 + article.text.replace("\n", BR + BR)));
+			
 			
 			//Для создания закладок и копирования текста
 			page.setTag(article.id);

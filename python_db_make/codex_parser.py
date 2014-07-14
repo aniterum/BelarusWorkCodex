@@ -45,6 +45,8 @@ for idx in chapters_idx:
 EXTRA_NAME = "%s<sup>%s</sup>"
 EXTRA_SPLITER = "|"
 
+#Поправка на примечания
+EXTRA_CORRECT = ["1024","1025","1026","1029","1030","1035","1037"]
 
 chapterID = 0
 chapters_dict = {}
@@ -64,7 +66,10 @@ for articles_ in articles_in_chapters_list:
         else:
             idx = art.split(".")[0].split(" ")[1]
             #Добавляем в dict соотношение {ID статьи : [ID главы, сдвиг в главе, экстра_имя]}
-            chapters_dict[idx] = [str(chapterID), offset, ""]
+            if idx in EXTRA_CORRECT:
+                chapters_dict[idx] = [str(chapterID), offset, "@"]
+            else: 
+                chapters_dict[idx] = [str(chapterID), offset, ""]
             offset += 1
 
      
