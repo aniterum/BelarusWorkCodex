@@ -1,8 +1,8 @@
 <resources> 
 
-    <string name="app_prefix">Job</string>
-    <string name="app_name">ТК РБ</string>
-    <string name="app_caption">Трудовой кодекс Республики Беларусь</string>
+    <string name="app_prefix">Admin</string>
+    <string name="app_name">КоАП РБ</string>
+    <string name="app_caption">Кодекс об административных правонарушениях</string>
     
     <string name="menu_email">Есть хорошая идея?</string>
     <string name="menu_vote">Голосование</string>
