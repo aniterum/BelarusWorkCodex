@@ -21,14 +21,13 @@ articles   = [line.strip() for line in allLines[divisor[1]+1:] if (line != line.
 #Получаем номер строк, в которых есть слово ГЛАВА или РАЗДЕЛ VI. (это заключительные положения)
 chapters_idx = []
 for line_idx in range(len(chapters)):
-    if (chapters[line_idx].startswith("ГЛАВА") or chapters[line_idx].startswith("РАЗДЕЛ VIII.")):
+    if (chapters[line_idx].startswith("ГЛАВА") or chapters[line_idx].startswith("РАЗДЕЛ VIII")):
         chapters_idx.append(line_idx)
 
 #С помощью генератора получаем список имён всех глав
 chapters_names_temp = [chapters[idx][chapters[idx].find(". ")+2:] for idx in chapters_idx]
 #Помещаем все имена в словарь, добавляя порядковый номер
 chapters_names = [{"id":i, "title":chapters_names_temp[i]} for i in range(len(chapters_names_temp))]
-
 
 articles_in_chapters_list = []
 for idx in chapters_idx:
