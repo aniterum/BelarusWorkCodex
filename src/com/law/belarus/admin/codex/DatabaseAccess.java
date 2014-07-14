@@ -1,4 +1,4 @@
-package com.law.belarus.job.codex;
+package com.law.belarus.admin.codex;
 
 import java.io.File;
 import java.io.FileNotFoundException;

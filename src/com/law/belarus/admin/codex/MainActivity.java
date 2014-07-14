@@ -1,4 +1,4 @@
-package com.law.belarus.job.codex;
+package com.law.belarus.admin.codex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.law.belarus.job.codex.MyHorizontalScrollView.SizeCallback;
+import com.law.belarus.admin.codex.MyHorizontalScrollView.SizeCallback;
 
 public class MainActivity extends Activity implements ArticleItemCallback {
 	private static MyHorizontalScrollView scrollView;
@@ -63,7 +63,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	private static final String DB_NAME = "codex.db";
 	public static String FILES_DIR;
 	public static DatabaseAccess db;
-	
+	 
 
 	//private static final String VOTE_URL = "https://docs.google.com/spreadsheet/viewform?formkey=dFFtU3RwT2FIUjNqOHZDWVhSc09NSWc6MQ#gid=0";
 	private static final String MENU_BUTTON_TAG = "MENU_BUTTON_TAG";
