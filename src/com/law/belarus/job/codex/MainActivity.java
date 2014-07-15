@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.format.Time;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -77,15 +78,17 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	
 	public static int COLOR_SCHEME = 2;
 	
-	public final String BR = "<br>";
+	public static final String BR = "<br>";
 	
-	public final String ARTICLE_START = "<b><i>Статья ";
-	public final String ARTICLE_FIN = ". ";
-	public final String ARTICLE_FIN2 = ".</i></b>" + BR + BR;
+	public static final String ARTICLE_START = "<b><i>Статья ";
+	public static final String ARTICLE_FIN = ". ";
+	public static final String ARTICLE_FIN2 = ".</i></b>" + BR + BR;
 	
-	public final String TEXT_ITEM_TAG = "textPageView";
-	public final String BUTTON_NEXT_TAG = "go_next_chapter_button";
-	public final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
+	public static final String TEXT_ITEM_TAG = "textPageView";
+	public static final String BUTTON_NEXT_TAG = "go_next_chapter_button";
+	public static final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
+	
+	public static float articleTextSize = 22.0f;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -243,7 +246,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		// == Меню - Добавить закладку ==
 		case R.id.menu_add_bookmark: {
-			
 				if (swipePageView == null){
 					makeToast(R.string.why_do_you_want_this);
 					return true;
@@ -327,6 +329,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 				e.printStackTrace();
 			}
 			break;
+		}
+
+		// == Меню - Изменить размер текста ==
+		case R.id.menu_text_size: {
+			MakeTextBigger();
 		}
 
 		}
@@ -693,6 +700,13 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		}
 		
 		adapter.notifyDataSetChanged();
+	}
+	
+	public void MakeTextBigger(){
+		MainActivity.articleTextSize++;
+		
+		swipePageView.getAdapter().notifyDataSetChanged();
+		
 	}
 	
 	// @Override
