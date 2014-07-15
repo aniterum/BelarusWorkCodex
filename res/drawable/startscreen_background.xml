@@ -10,6 +10,6 @@
     <item>
         <bitmap
            android:dither="true"
-           android:src="@drawable/icon_book_gk"/>
+           android:src="@drawable/icon_book"/>
     </item>
 </layer-list>
