@@ -84,7 +84,7 @@ public class DatabaseAccess {
 	 * @param res - Ресурсы приложения, для доступа к базе данных
 	 */
 	public DatabaseAccess(String dbPath, Resources res) {
-
+ 
 		Boolean db_exists = new File(dbPath).exists();
 		//Проверка на существование файла
 		if (db_exists) {
@@ -285,7 +285,7 @@ public class DatabaseAccess {
 		do {
 			chapterID = chapters.getInt(SQL_CHAPTER_ID); //Получаем порядковый номер главы
 			articles = base.rawQuery(SQL_QUERY_ARTICES + chapterID, null); //Загружаем статьи из этой главы
-			
+
 			articles.moveToFirst();
 			firstArticle = articles.getInt(0);	//Узнаём ID первой статьи в этой главе
 			
