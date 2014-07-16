@@ -12,6 +12,7 @@
     <string name="menu_search">Поиск</string>
     <string name="menu_show_bookmarks">Закладки</string>
     <string name="menu_color_toggle">Цвет</string>
+    <string name="menu_text_size">Размер текста</string>
     
     <string name="text_copy_msg">Текст скопирован</string>
     <string name="text_copy_msg_err">Ошибка копирования</string>
@@ -41,7 +42,8 @@
     
 	<string name="test_chapter">123</string>
 
-    <string name="db_version">87cd2e77ebdaeff2551f22d031631d131a8b65be</string>
+    <string name="db_version">ecbafbebf1ca08f86ac7f14c850f8291eff10621</string>
+
     
     
 </resources>
