@@ -132,12 +132,15 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		scrollView.initViews(children, scrollToViewIdx, new SizeCallbackForMenu(btnSlide));
 
 		// ===========================================================================================//
-
+		
+		COLOR_SCHEME = db.getSetting(DatabaseAccess.SETTING_COLOR);
+		articleTextSize = db.getSetting(DatabaseAccess.SETTING_TEXT_SIZE);
+		
 		setContentView(scrollView);
 
 		pagesContainer = (LinearLayout) app.findViewById(R.id.pagesContainer);
 		chapterCaption = (TextView) app.findViewById(R.id.caption_text);
-
+		
 		viewUtils = new ViewUtils(this, this);
 
 		chapterListView = (ListView) menu.findViewById(R.id.list);
@@ -150,6 +153,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			chapterCaption.setText(db.getChapterTitleById(openedChapter));
 			loadPages(openedChapter, openedArticleInChapter, ViewUtils.DO_NOT_SLIDE);
 		}
+		
+		
 
 	}
 
@@ -555,6 +560,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		pagesContainer.addView(swipePageView);
 		
+		if (COLOR_SCHEME == WHITE_TEXT_ON_BLACK)
+			pagesContainer.setBackgroundColor(Color.BLACK);
+		else
+			pagesContainer.setBackgroundColor(Color.WHITE);
+		
 //		articlesListView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out));
 		switch (animation){
 		case -1: swipePageView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.chapter_slide_out)); break;
@@ -678,6 +688,10 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			backGroundColor = Color.BLACK;
 			textColor = Color.WHITE;
 			break;
+		default:
+			backGroundColor = Color.BLACK;
+			textColor = Color.WHITE;
+			break;
 		}
 		
 		swipePageView.setBackgroundColor(backGroundColor);
@@ -703,6 +717,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		}
 		
 		adapter.notifyDataSetChanged();
+		db.setSetting(DatabaseAccess.SETTING_COLOR, COLOR_SCHEME);
 	}
 	
 	public void ShowTextSizeDialog(){
@@ -717,11 +732,10 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	 * @param offset
 	 */
 	public static TextView ChangeTextSize(float offset, TextView reusedView) {
-		if (articleTextSize + offset < 2)
-			return reusedView;
-		
 		if (reusedView != null){
 			articleTextSize += offset;
+			if (articleTextSize < 2)
+				articleTextSize = 2;
 			reusedView.setTextSize(articleTextSize);
 			return reusedView;
 		}
@@ -758,6 +772,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
 			if (adapter != null)
 				adapter.notifyDataSetChanged();
+			
+			db.setSetting(DatabaseAccess.SETTING_TEXT_SIZE, (int)articleTextSize);
 		}
 	}
 	

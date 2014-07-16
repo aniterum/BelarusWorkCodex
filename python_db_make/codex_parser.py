@@ -156,7 +156,7 @@ WHITE_TEXT_ON_BLACK = 2
 DEFAUL_TEXT_SIZE    = 16
 SETTINGS = [
             {"key":"color", "value":WHITE_TEXT_ON_BLACK},
-            {"key":"size",  "value":DEFAUL_TEXT_SIZE}
+            {"key":"text_size",  "value":DEFAUL_TEXT_SIZE}
            ]
 
 for setting in SETTINGS:

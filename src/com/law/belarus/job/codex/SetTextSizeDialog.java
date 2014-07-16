@@ -48,6 +48,9 @@ public class SetTextSizeDialog extends Activity {
 		return appContext;
 	}
 
+	/**
+	 * Сработает при нажатии мимо диалога 
+	 */
 	@Override
 	protected void onPause() {
 		MainActivity.UpdateTextViews();
