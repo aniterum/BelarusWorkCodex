@@ -333,7 +333,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		// == Меню - Изменить размер текста ==
 		case R.id.menu_text_size: {
-			MakeTextBigger();
+			ShowTextSizeDialog();
 		}
 
 		}
@@ -578,6 +578,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		
 		TextView text = (TextView)docInfo.findViewWithTag(TEXT_ITEM_TAG);
 		text.setText(Html.fromHtml(db.getDocumentInfo().replace("\n", "<br>")));
+		text.setTextSize(TypedValue.COMPLEX_UNIT_SP, articleTextSize);
 		
 		switch (COLOR_SCHEME){
 		case BLACK_TEXT_ON_WHITE : 
@@ -703,17 +704,29 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		adapter.notifyDataSetChanged();
 	}
 	
-	public void MakeTextBigger(){
-		MainActivity.articleTextSize++;
+	public void ShowTextSizeDialog(){
+		Intent intent = new Intent(this, SetTextSizeDialog.class);
+		startActivityForResult(intent, 0);
+
+	}
+	
+	public static void MakeTextBigger(){
 		
-		swipePageView.getAdapter().notifyDataSetChanged();
+		SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
+		if (adapter != null){
+			articleTextSize++;
+			adapter.notifyDataSetChanged();
+		}
 		
 	}
 	
-	public void MakeTextSmaller(){
-		MainActivity.articleTextSize--; 
+	public static void MakeTextSmaller(){
 		
-		swipePageView.getAdapter().notifyDataSetChanged();
+		SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
+		if (adapter != null){
+			articleTextSize--;
+			adapter.notifyDataSetChanged();
+		}
 		
 	}
 	

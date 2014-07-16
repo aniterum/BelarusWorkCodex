@@ -31,7 +31,11 @@
             android:name="com.law.belarus.job.codex.EmailActivity"
             android:label="@string/dialog_email">
         </activity>
-        
-    </application>
+        <activity
+            android:name="com.law.belarus.job.codex.SetTextSizeDialog"
+            android:theme="@android:style/Theme.Dialog"
+            android:label="@string/dialog_text_size" >
+        </activity>
+</application>
 
 </manifest>
