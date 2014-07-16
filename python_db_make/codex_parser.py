@@ -104,7 +104,7 @@ for line_idx in articles_idx:
     if ex != -1:
         text = text[:ex]
 
-    
+    text = text.replace("\n","<br><br>") + "<br>"
     
     articles_list_dict.append({"id":article_id, "chapter":chapters_dict[article_id][0], "title":article_title.strip(), "text":text, "offset":chapters_dict[article_id][1], "extra_id":chapters_dict[article_id][2]})
 
