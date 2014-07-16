@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.format.Time;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -77,15 +78,18 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	
 	public static int COLOR_SCHEME = 2;
 	
-	public final String BR = "<br>";
+	public static final String BR = "<br>";
 	
 	public final String ARTICLE_START = "<b><i>Статья ";
 	public final String ARTICLE_FIN = " ";
 	public final String ARTICLE_FIN2 = ".</i></b>" + BR + BR;
 	
-	public final String TEXT_ITEM_TAG = "textPageView";
-	public final String BUTTON_NEXT_TAG = "go_next_chapter_button";
-	public final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
+	public static final String TEXT_ITEM_TAG = "textPageView";
+	public static final String BUTTON_NEXT_TAG = "go_next_chapter_button";
+	public static final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
+	
+	public static float articleTextSize = 16.0f;
+	public static final float TEXT_SIZE_OFFSET = 2.0f;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -128,12 +132,15 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		scrollView.initViews(children, scrollToViewIdx, new SizeCallbackForMenu(btnSlide));
 
 		// ===========================================================================================//
-
+		
+		COLOR_SCHEME = db.getSetting(DatabaseAccess.SETTING_COLOR);
+		articleTextSize = db.getSetting(DatabaseAccess.SETTING_TEXT_SIZE);
+		
 		setContentView(scrollView);
 
 		pagesContainer = (LinearLayout) app.findViewById(R.id.pagesContainer);
 		chapterCaption = (TextView) app.findViewById(R.id.caption_text);
-
+		
 		viewUtils = new ViewUtils(this, this);
 
 		chapterListView = (ListView) menu.findViewById(R.id.list);
@@ -146,6 +153,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			chapterCaption.setText(db.getChapterTitleById(openedChapter));
 			loadPages(openedChapter, openedArticleInChapter, ViewUtils.DO_NOT_SLIDE);
 		}
+		
+		
 
 	}
 
@@ -243,7 +252,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		// == Меню - Добавить закладку ==
 		case R.id.menu_add_bookmark: {
-			
 				if (swipePageView == null){
 					makeToast(R.string.why_do_you_want_this);
 					return true;
@@ -327,6 +335,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 				e.printStackTrace();
 			}
 			break;
+		}
+
+		// == Меню - Изменить размер текста ==
+		case R.id.menu_text_size: {
+			ShowTextSizeDialog();
 		}
 
 		}
@@ -473,6 +486,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 				textView.setText(Html.fromHtml(ARTICLE_START + article.extra_id    + ARTICLE_FIN
 						 									 + article.title + ARTICLE_FIN2
 						 									 + article.text));
+
 			
 			//Для создания закладок и копирования текста
 			page.setTag(article.id);
@@ -547,6 +561,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 		pagesContainer.addView(swipePageView);
 		
+		if (COLOR_SCHEME == WHITE_TEXT_ON_BLACK)
+			pagesContainer.setBackgroundColor(Color.BLACK);
+		else
+			pagesContainer.setBackgroundColor(Color.WHITE);
+		
 //		articlesListView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_out));
 		switch (animation){
 		case -1: swipePageView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.chapter_slide_out)); break;
@@ -571,6 +590,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		
 		TextView text = (TextView)docInfo.findViewWithTag(TEXT_ITEM_TAG);
 		text.setText(Html.fromHtml(db.getDocumentInfo().replace("\n", "<br>")));
+		text.setTextSize(TypedValue.COMPLEX_UNIT_SP, articleTextSize);
 		
 		switch (COLOR_SCHEME){
 		case BLACK_TEXT_ON_WHITE : 
@@ -669,6 +689,10 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			backGroundColor = Color.BLACK;
 			textColor = Color.WHITE;
 			break;
+		default:
+			backGroundColor = Color.BLACK;
+			textColor = Color.WHITE;
+			break;
 		}
 		
 		swipePageView.setBackgroundColor(backGroundColor);
@@ -694,6 +718,64 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		}
 		
 		adapter.notifyDataSetChanged();
+		db.setSetting(DatabaseAccess.SETTING_COLOR, COLOR_SCHEME);
+	}
+	
+	public void ShowTextSizeDialog(){
+		Intent intent = new Intent(this, SetTextSizeDialog.class);
+		startActivityForResult(intent, 0);
+
+	}
+	
+	/**
+	 * Изменяет размер текста на заданный сдвиг
+	 * 
+	 * @param offset
+	 */
+	public static TextView ChangeTextSize(float offset, TextView reusedView) {
+		if (reusedView != null){
+			articleTextSize += offset;
+			if (articleTextSize < 2)
+				articleTextSize = 2;
+			reusedView.setTextSize(articleTextSize);
+			return reusedView;
+		}
+		
+		
+		if (swipePageView != null) {
+			SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
+			if (adapter != null) {
+
+				final int childCount = swipePageView.getChildCount();
+				final int currentItem = swipePageView.getCurrentItem();
+				final View currentView = adapter.pages.get(currentItem);
+				articleTextSize += offset;
+
+				View v;
+				for (int childIdx = 0; childIdx < childCount; childIdx++) {
+					v = swipePageView.getChildAt(childIdx);
+					if ((v != null) && (v.equals(currentView))) {
+						TextView textView = (TextView) v.findViewWithTag(TEXT_ITEM_TAG);
+						if (textView != null) {
+							textView.setTextSize(articleTextSize);
+							return reusedView;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static void UpdateTextViews() {
+		if (swipePageView != null) {
+
+			SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
+			if (adapter != null)
+				adapter.notifyDataSetChanged();
+			
+			db.setSetting(DatabaseAccess.SETTING_TEXT_SIZE, (int)articleTextSize);
+		}
 	}
 	
 	// @Override
