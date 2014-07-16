@@ -709,6 +709,13 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		
 	}
 	
+	public void MakeTextSmaller(){
+		MainActivity.articleTextSize--; 
+		
+		swipePageView.getAdapter().notifyDataSetChanged();
+		
+	}
+	
 	// @Override
 	// protected void onPause() {
 	// Log.i("OnPause", "Уход на задний план");
