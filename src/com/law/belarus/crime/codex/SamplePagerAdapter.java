@@ -5,7 +5,9 @@ import java.util.List;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.TextView;
 
 public class SamplePagerAdapter extends PagerAdapter{
     
@@ -18,6 +20,13 @@ public class SamplePagerAdapter extends PagerAdapter{
     @Override
     public Object instantiateItem(View collection, int position){
         View v = pages.get(position);
+        
+        TextView textView = (TextView) v.findViewWithTag(MainActivity.TEXT_ITEM_TAG);
+
+		if (textView != null)
+			textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, MainActivity.articleTextSize);
+		
+        
         ((ViewPager) collection).addView(v, 0);
         return v;
     }
@@ -53,4 +62,9 @@ public class SamplePagerAdapter extends PagerAdapter{
     @Override
     public void startUpdate(View arg0){
     }
+
+	@Override
+	public int getItemPosition(Object object) {
+		return POSITION_NONE;
+	}
 }

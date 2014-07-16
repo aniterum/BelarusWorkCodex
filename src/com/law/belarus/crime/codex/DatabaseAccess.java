@@ -34,6 +34,7 @@ public class DatabaseAccess {
 	private static final String TABLE_NAME_ARTICLES = "Articles";
 	private static final String TABLE_NAME_CHAPTERS = "Chapters";
 	private static final String TABLE_NAME_DOCINFO = "Docinfo";
+	private static final String TABLE_NAME_SETTINGS = "Settings";
 	
 	private static final String SELECT = "select ";
 	private static final String FROM = " from ";
@@ -53,6 +54,11 @@ public class DatabaseAccess {
 	private static final String ARTICLE_COLUMN_EXTRA_ID = "EXTRA_ID";
 	private static final String DOCINFO_COLUMN_TEXT = "INFO";
 	private static final String DOCINFO_COLUMN_VERSION = "VERSION";
+	private static final String SETTINGS_COLUMN_KEY = "KEY";
+	private static final String SETTINGS_COLUMN_VALUE = "VALUE";
+	
+	public static final String SETTING_COLOR = "color";
+	public static final String SETTING_TEXT_SIZE = "text_size";
 	
 	private static final int BOOKMARK_OFF = 0;
 	private static final int BOOKMARK_ON = 1;
@@ -175,6 +181,7 @@ public class DatabaseAccess {
 		SQL_DOCINFO_TEXT = docinfo.getColumnIndex(DOCINFO_COLUMN_TEXT);
 		
 		CHAPTERS_COUNT = getChaptersList().size();
+		
 
 	}
 
@@ -528,6 +535,30 @@ public class DatabaseAccess {
 		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
 		
 	}
+	
+	public int getSetting(final String key){
+		final String SQL_QUERY = SELECT + SETTINGS_COLUMN_VALUE + FROM + TABLE_NAME_SETTINGS + WHERE + SETTINGS_COLUMN_KEY + EQUAL + "\"" + key + "\"";
+	
+		final Cursor cursor = base.rawQuery(SQL_QUERY, null);
+
+		if (cursor.getCount() == 0)
+			return -1;
+		else{
+			cursor.moveToFirst();
+			return cursor.getInt(0);
+		}
+	}
+	
+	public int setSetting(final String key, final int value){
+
+		final ContentValues values = new ContentValues();
+		values.put(SETTINGS_COLUMN_VALUE, value);
+		
+		return base.update(TABLE_NAME_SETTINGS, values, SETTINGS_COLUMN_KEY + EQUAL + "\"" + key + "\"", null);
+		
+	}
+		
+
 	
 	
 	
