@@ -1,4 +1,4 @@
-package com.law.belarus.job.codex;
+package com.law.belarus.civil_process.codex;
 
 import java.net.URLEncoder;
 import java.util.Locale;

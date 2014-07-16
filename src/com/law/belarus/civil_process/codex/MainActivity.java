@@ -1,4 +1,4 @@
-package com.law.belarus.job.codex;
+package com.law.belarus.civil_process.codex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.law.belarus.job.codex.MyHorizontalScrollView.SizeCallback;
+import com.law.belarus.civil_process.codex.MyHorizontalScrollView.SizeCallback;
 
 public class MainActivity extends Activity implements ArticleItemCallback {
 	private static MyHorizontalScrollView scrollView;
