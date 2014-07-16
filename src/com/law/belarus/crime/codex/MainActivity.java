@@ -78,7 +78,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	
 	public static int COLOR_SCHEME = 2;
 	 
-	public final String BR = "<br>";
+	public static final String BR = "<br>";
 	
 	public static final String BI_START = "<b><i>";
 	public static final String BI_END = "</i></b>";
