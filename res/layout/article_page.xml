@@ -5,11 +5,12 @@
 
     <TextView
         android:tag="textPageView"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:linksClickable="false"
         
         android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp"
         tools:context=".MainActivity" />

@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.format.Time;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -89,7 +88,7 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	public static final String BUTTON_NEXT_TAG = "go_next_chapter_button";
 	public static final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
 	
-	public static float articleTextSize = 20.0f;
+	public static float articleTextSize = 16.0f;
 	public static final float TEXT_SIZE_OFFSET = 2.0f;
 	
 	@Override
@@ -714,25 +713,43 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	
 	/**
 	 * Изменяет размер текста на заданный сдвиг
+	 * 
 	 * @param offset
 	 */
-	public static void ChangeTextSize(float offset) {
-		if (swipePageView != null) {
-
-			final int childCount = swipePageView.getChildCount();
+	public static TextView ChangeTextSize(float offset, TextView reusedView) {
+		if (articleTextSize + offset < 2)
+			return reusedView;
+		
+		if (reusedView != null){
 			articleTextSize += offset;
+			reusedView.setTextSize(articleTextSize);
+			return reusedView;
+		}
+		
+		
+		if (swipePageView != null) {
+			SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
+			if (adapter != null) {
 
-			View v;
-			for (int childIdx = 0; childIdx < childCount; childIdx++) {
-				v = swipePageView.getChildAt(childIdx);
-				if (v != null) {
-					TextView textView = (TextView) v.findViewWithTag(TEXT_ITEM_TAG);
-					if (textView != null) {
-						textView.setTextSize(articleTextSize);
+				final int childCount = swipePageView.getChildCount();
+				final int currentItem = swipePageView.getCurrentItem();
+				final View currentView = adapter.pages.get(currentItem);
+				articleTextSize += offset;
+
+				View v;
+				for (int childIdx = 0; childIdx < childCount; childIdx++) {
+					v = swipePageView.getChildAt(childIdx);
+					if ((v != null) && (v.equals(currentView))) {
+						TextView textView = (TextView) v.findViewWithTag(TEXT_ITEM_TAG);
+						if (textView != null) {
+							textView.setTextSize(articleTextSize);
+							return reusedView;
+						}
 					}
 				}
 			}
 		}
+		return null;
 	}
 	
 	public static void UpdateTextViews() {

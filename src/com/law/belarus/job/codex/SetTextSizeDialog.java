@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Toast;
+import android.widget.TextView;
 import android.widget.ZoomControls;
 
 /*
@@ -14,6 +14,7 @@ import android.widget.ZoomControls;
 public class SetTextSizeDialog extends Activity {
 	
 	private static Context appContext;
+	private static TextView lastUsedView = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,7 @@ public class SetTextSizeDialog extends Activity {
 		controls.setOnZoomInClickListener(new OnClickListener(){
 
 			public void onClick(View v) {
-				MainActivity.ChangeTextSize(MainActivity.TEXT_SIZE_OFFSET);		
+				lastUsedView = MainActivity.ChangeTextSize(MainActivity.TEXT_SIZE_OFFSET, lastUsedView);		
 			}
 			
 		});
@@ -36,7 +37,7 @@ public class SetTextSizeDialog extends Activity {
 		controls.setOnZoomOutClickListener(new OnClickListener(){
 
 			public void onClick(View v) {
-				MainActivity.ChangeTextSize( - MainActivity.TEXT_SIZE_OFFSET);
+				lastUsedView = MainActivity.ChangeTextSize( - MainActivity.TEXT_SIZE_OFFSET, lastUsedView);		
 			}
 			
 		});
@@ -49,8 +50,8 @@ public class SetTextSizeDialog extends Activity {
 
 	@Override
 	protected void onPause() {
-		Toast.makeText(getContext(), "onPause", Toast.LENGTH_SHORT).show();
 		MainActivity.UpdateTextViews();
+		lastUsedView = null;
 		super.onPause();
 	}
 
