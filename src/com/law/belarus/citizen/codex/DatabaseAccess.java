@@ -520,7 +520,9 @@ public class DatabaseAccess {
 		if (cursor.getCount() == 0)
 			return null;
 		
-		return ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
+		final String result = ARTICLE + cursor.getInt(SQL_ARTICLE_ID) + ". " + cursor.getString(SQL_ARTICLE_TITLE) + ".\n\n" + cursor.getString(SQL_ARTICLE_TEXT);
+		
+		return result.replace(MainActivity.BR, "\n");
 		
 	}
 	
