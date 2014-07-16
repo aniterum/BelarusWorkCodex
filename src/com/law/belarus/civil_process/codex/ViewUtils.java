@@ -116,8 +116,11 @@ public void initListViewChapters(Context context, final ListView listView, int l
          */
         for (Chapter chapter : chaptersList){
      	   hm = new HashMap<String, Object>();
-     	   hm.put(CHAPTER_NAME, chapter.title);                 
-     	   hm.put(ARTICLES_IN_CHAPTER, "ст." + chapter.firstArticle + "-" + chapter.lastArticle);         
+     	   hm.put(CHAPTER_NAME, chapter.title);
+     	   if (chapter.firstArticle == 10000)
+     		   hm.put(ARTICLES_IN_CHAPTER,""); 
+     	   else
+     		  hm.put(ARTICLES_IN_CHAPTER, "ст." + chapter.firstArticle + "-" + chapter.lastArticle); 
      	   if (chapter.id < 9)
      		   hm.put(CHAPTER_ID, " " + (chapter.id + PLUS_ONE_FOR_BOOKMARKS));
      	   else

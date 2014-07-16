@@ -63,8 +63,14 @@ for articles_ in articles_in_chapters_list:
         else:
             idx = art.split(".")[0].split(" ")[1]
             #Добавляем в dict соотношение {ID статьи : [ID главы, сдвиг в главе, экстра_имя]}
-            chapters_dict[idx] = [str(chapterID), offset, ""]
-            offset += 1
+            try:
+                if (int(idx) > 9000):
+                    chapters_dict[idx] = [str(chapterID), offset, " "]
+                else:
+                    chapters_dict[idx] = [str(chapterID), offset, ""]
+                offset += 1
+            except:
+                print(idx)
 
      
     chapterID += 1
