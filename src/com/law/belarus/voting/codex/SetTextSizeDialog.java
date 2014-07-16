@@ -1,4 +1,4 @@
-package com.law.belarus.job.codex;
+package com.law.belarus.voting.codex;
 
 import android.app.Activity;
 import android.content.Context;

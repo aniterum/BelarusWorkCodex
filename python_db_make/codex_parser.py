@@ -181,4 +181,4 @@ with open(file, "rt") as str_file:
 
 open(file, "wt").write("".join(result))
 
-os.system("cp -b ./codex.sqlite ../res/raw/codex.db")
+os.system("cp -b ./codex_vc.sqlite ../res/raw/codex.db")
