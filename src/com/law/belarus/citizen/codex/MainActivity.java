@@ -467,11 +467,11 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			if (article.extra_id.equals(""))
 				textView.setText(Html.fromHtml(ARTICLE_START + article.id    + ARTICLE_FIN
 															 + article.title + ARTICLE_FIN2
-												             + article.text.replace("\n", BR + BR)));
+															 + article.text));
 			else
 				textView.setText(Html.fromHtml(ARTICLE_START + article.extra_id    + ARTICLE_FIN
 						 									 + article.title + ARTICLE_FIN2
-						 									 + article.text.replace("\n", BR + BR)));
+						 									 + article.text));
 			
 			//Для создания закладок и копирования текста
 			page.setTag(article.id);
