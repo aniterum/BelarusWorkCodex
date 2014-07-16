@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.format.Time;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -88,7 +89,8 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 	public static final String BUTTON_NEXT_TAG = "go_next_chapter_button";
 	public static final String CAPTION_NEXT_TAG = "go_next_chapter_caption";
 	
-	public static float articleTextSize = 22.0f;
+	public static float articleTextSize = 20.0f;
+	public static final float TEXT_SIZE_OFFSET = 2.0f;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -710,24 +712,36 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 
 	}
 	
-	public static void MakeTextBigger(){
-		
-		SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
-		if (adapter != null){
-			articleTextSize++;
-			adapter.notifyDataSetChanged();
+	/**
+	 * Изменяет размер текста на заданный сдвиг
+	 * @param offset
+	 */
+	public static void ChangeTextSize(float offset) {
+		if (swipePageView != null) {
+
+			final int childCount = swipePageView.getChildCount();
+			articleTextSize += offset;
+
+			View v;
+			for (int childIdx = 0; childIdx < childCount; childIdx++) {
+				v = swipePageView.getChildAt(childIdx);
+				if (v != null) {
+					TextView textView = (TextView) v.findViewWithTag(TEXT_ITEM_TAG);
+					if (textView != null) {
+						textView.setTextSize(articleTextSize);
+					}
+				}
+			}
 		}
-		
 	}
 	
-	public static void MakeTextSmaller(){
-		
-		SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
-		if (adapter != null){
-			articleTextSize--;
-			adapter.notifyDataSetChanged();
+	public static void UpdateTextViews() {
+		if (swipePageView != null) {
+
+			SamplePagerAdapter adapter = (SamplePagerAdapter) swipePageView.getAdapter();
+			if (adapter != null)
+				adapter.notifyDataSetChanged();
 		}
-		
 	}
 	
 	// @Override
