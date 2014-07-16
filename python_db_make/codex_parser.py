@@ -126,15 +126,18 @@ cur = db.cursor()
 CREATE_TABLE_ARTICLES = "CREATE TABLE Articles (ID UNSIGNED INT PRIMARY KEY, CHAPTER UNSIGNED INT, TITLE TINYTEXT, ARTICLE_TEXT TEXT, IN_BOOKMARKS INT, OFFSET INT, EXTRA_ID TINYTEXT)"
 CREATE_TABLE_CHAPTERS = "CREATE TABLE Chapters (ID UNSIGNED INT, TITLE TINYTEXT)"
 CREATE_TABLE_DOCINFO  = "CREATE TABLE Docinfo  (ID UNSIGNED INT, TITLE TINYTEXT, INFO TEXT, VERSION TINYTEXT)"
+CREATE_TABLE_SETTINGS = "CREATE TABLE Settings (KEY TINYTEXT, VALUE INT)"
 
 INSERT_ARTICLE = "INSERT INTO Articles VALUES ('%(id)s', '%(chapter)s', '%(title)s', '%(text)s', '0', '%(offset)s', '%(extra_id)s')"
 INSERT_CHAPTER = "INSERT INTO Chapters VALUES ('%(id)s', '%(title)s')"
 INSERT_DOCINFO = "INSERT INTO Docinfo  VALUES ('%(zero)s', '%(title)s', '%(text)s', '%(version)s')"
+INSERT_SETTINGS= "INSERT INTO Settings VALUES ('%(key)s', '%(value)s')"
 
 
 cur.execute(CREATE_TABLE_ARTICLES)
 cur.execute(CREATE_TABLE_CHAPTERS)
 cur.execute(CREATE_TABLE_DOCINFO)
+cur.execute(CREATE_TABLE_SETTINGS)
 
 for article in articles_list_dict:
     cur.execute(INSERT_ARTICLE % article)
@@ -148,6 +151,16 @@ cur_time = str(datetime.datetime.toordinal(datetime.datetime.now())) + "_" + str
 version = hashlib.sha1(cur_time.encode()).hexdigest()
 
 cur.execute(INSERT_DOCINFO % {"zero":"0", "title":"О документе", "text":"".join(codex_info).strip(), "version":version})
+
+WHITE_TEXT_ON_BLACK = 2
+DEFAUL_TEXT_SIZE    = 16
+SETTINGS = [
+            {"key":"color", "value":WHITE_TEXT_ON_BLACK},
+            {"key":"size",  "value":DEFAUL_TEXT_SIZE}
+           ]
+
+for setting in SETTINGS:
+    cur.execute(INSERT_SETTINGS % setting)
 
 db.commit()
 db.close()
