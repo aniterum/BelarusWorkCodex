@@ -1,6 +1,6 @@
 # coding: utf-8
 
-codex_file = "codex.txt"
+codex_file = "codex_civil_pr.txt"
 
 with open(codex_file, "rt") as codex:
     allLines = codex.readlines()
@@ -13,15 +13,15 @@ for line_idx in range(len(allLines)):
         divisor.append(line_idx)
 
 codex_info = [line for line in allLines[:divisor[0]]] #if (line != "\n") ]
-chapters   = [line.strip() for line in allLines[divisor[0]+1:divisor[1]] if (line != "\n")]
+chapters   = [line.strip() for line in allLines[divisor[0]+1:divisor[1]] if ((line != "\n") and (not line.startswith("§")))]
 articles   = [line.strip() for line in allLines[divisor[1]+1:] if line != line.upper() ]
 
 #===========================================================================================
 
-#Получаем номер строк, в которых есть слово ГЛАВА или РАЗДЕЛ VI. (это заключительные положения)
+#Получаем номер строк, в которых есть слово ГЛАВА 
 chapters_idx = []
 for line_idx in range(len(chapters)):
-    if (chapters[line_idx].startswith("ГЛАВА") or chapters[line_idx].startswith("РАЗДЕЛ VI.")):
+    if (chapters[line_idx].startswith("ГЛАВА")):
         chapters_idx.append(line_idx)
 
 #С помощью генератора получаем список имён всех глав
@@ -181,4 +181,4 @@ with open(file, "rt") as str_file:
 
 open(file, "wt").write("".join(result))
 
-os.system("cp -b ./codex.sqlite ../res/raw/codex.db")
+os.system("cp -b ./codex_civil_pr.sqlite ../res/raw/codex.db")

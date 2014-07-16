@@ -1,8 +1,8 @@
 <resources> 
 
-    <string name="app_prefix">Job</string>
-    <string name="app_name">ТК РБ</string>
-    <string name="app_caption">Трудовой кодекс Республики Беларусь</string>
+    <string name="app_prefix">Civil_Process</string>
+    <string name="app_name">ГПК РБ</string>
+    <string name="app_caption">Гражданский процессуальный кодекс Республики Беларусь</string>
     
     <string name="menu_email">Есть хорошая идея?</string>
     <string name="menu_vote">Голосование</string>
@@ -44,7 +44,7 @@
     
 	<string name="test_chapter">123</string>
 
-    <string name="db_version">b15e2da84dc2971ca0104ecfc952d50a6ff762fa</string>
+    <string name="db_version">3c07fff20e98f3c743168e883f860bef97e428b8</string>
 
     
     
