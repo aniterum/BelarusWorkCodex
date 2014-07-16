@@ -1,6 +1,6 @@
 # coding: utf-8
 
-codex_file = "codex.txt"
+codex_file = "codex_vc.txt"
 
 with open(codex_file, "rt") as codex:
     allLines = codex.readlines()
