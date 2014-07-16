@@ -12,6 +12,7 @@
     <string name="menu_search">Поиск</string>
     <string name="menu_show_bookmarks">Закладки</string>
     <string name="menu_color_toggle">Цвет</string>
+    <string name="menu_text_size">Размер текста</string>
     
     <string name="text_copy_msg">Текст скопирован</string>
     <string name="text_copy_msg_err">Ошибка копирования</string>
@@ -20,6 +21,8 @@
     <string name="dialog_email">Отправить сообщение разработчику</string>
     <string name="dialog_email_who_are_you">Представитесь?</string>
     <string name="dialog_email_message_text">Можете писать что угодно :)</string>
+    
+    <string name="dialog_text_size">Изменить размер текста</string>
     
     <string name="you_have_no_bookmarks">У вас нет закладок</string>
     <string name="bookmark_already_exists">Эта статья уже есть в ваших закладках!</string>
@@ -41,7 +44,7 @@
     
 	<string name="test_chapter">123</string>
 
-    <string name="db_version">843f188ce5892251ee727bab79d6d27bd66a921d</string>
+    <string name="db_version">ffcc2a1091f60ee715ec0d078c22200be342a5a9</string>
     
     
 </resources>
