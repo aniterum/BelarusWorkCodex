@@ -42,8 +42,7 @@
 	<string name="test_chapter">123</string>
 
 
-    <string name="db_version">d3d2976a3ff41612d66a35553f569725110406da</string>
-
+    <string name="db_version">b66344333c228e13d9d90ac45e17811eaa9673d8</string>
     
     
 </resources>
