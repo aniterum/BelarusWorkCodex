@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.ClipboardManager;
@@ -155,6 +160,37 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		}
 		
 		
+		SharedPreferences settings = getSharedPreferences("update", 0);
+		Editor editor = settings.edit();
+		
+		
+		if (settings.getInt("update_notify", 0) != 1) {
+	        editor.putInt("update_notify", 1);
+	        editor.commit();
+
+			new AlertDialog.Builder(this)
+					.setTitle("Обновление")
+					.setMessage("Это приложение больше не будет обновляться, но мы выпустили другое, которое вас может устроить.\nВы всегда можете сделать это позже из меню приложения.\nПерейти в Google Play?")
+					.setIcon(R.drawable.default_icon)
+
+					.setPositiveButton(android.R.string.yes,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,	int whichButton) {
+									final String appPackageName = "by.laws.aniterum.lawsviewer";
+									try {
+										startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+									} catch (android.content.ActivityNotFoundException anfe) {
+										startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id="	+ appPackageName)));
+									}
+								}
+							}).setNegativeButton(android.R.string.no, null)
+					.show();
+		}
+		
+
+
+		
+		
 
 	}
 
@@ -274,13 +310,6 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 			}
 			break;
 		}
-
-		// == Меню - Отправить сообщение разработчику ==
-		case R.id.menu_email: {
-			Intent intent = new Intent(this, EmailActivity.class);
-			startActivityForResult(intent, 0);
-			break;
-		}
 		
 		// == Меню - Изменить цветовую схему ==
 		case R.id.menu_color_toggle: {
@@ -340,6 +369,17 @@ public class MainActivity extends Activity implements ArticleItemCallback {
 		// == Меню - Изменить размер текста ==
 		case R.id.menu_text_size: {
 			ShowTextSizeDialog();
+			break;
+		}
+		
+		case R.id.menu_update:{
+			final String appPackageName = "by.laws.aniterum.lawsviewer";
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
+			break;
 		}
 
 		}

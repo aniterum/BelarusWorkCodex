@@ -57,8 +57,10 @@ public class DatabaseAccess {
 	private static final String SETTINGS_COLUMN_KEY = "KEY";
 	private static final String SETTINGS_COLUMN_VALUE = "VALUE";
 	
+	
 	public static final String SETTING_COLOR = "color";
 	public static final String SETTING_TEXT_SIZE = "text_size";
+	public static final String SETTING_UPDATE_NOTIFY = "update_notify";
 	
 	private static final int BOOKMARK_OFF = 0;
 	private static final int BOOKMARK_ON = 1;

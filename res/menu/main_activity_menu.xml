@@ -1,10 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     
-    <item android:id="@+id/menu_email"
-        android:title="@string/menu_email"
+
+    
+    <item android:id="@+id/menu_update"
+        android:title="@string/menu_update"
         android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_help" />
+        android:icon="@drawable/arr_down" />
     
 <!--      <item android:id="@+id/menu_vote"
         android:title="@string/menu_vote"
@@ -35,6 +37,8 @@
         android:title="@string/menu_text_size"
         android:orderInCategory="100"
         android:icon="@android:drawable/stat_notify_sync" />
+    
+
     
     <!-- <item android:id="@+id/menu_search"
         android:title="@string/menu_search"
